@@ -6,391 +6,400 @@
 <title>Liaga Recrecene</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant+SC:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+SC:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;font-size:17px}
+html{scroll-behavior:smooth;font-size:16px}
 
 :root{
   --black:#070605;
   --ember:#8b1a1a;
-  --crimson:#c0392b;
-  --violet:#6a4a8a;
-  --moss:#3a5a3a;
   --bone:#ede5d5;
   --dust:#9a8e80;
-  --paper:#f6f3ee;
-  --warm-white:#faf8f4;
+  --paper:#f7f5f1;
+  --white:#ffffff;
   --ink:#1a1612;
-  --ink2:#2e2820;
-  --rule:#ddd5c5;
+  --ink2:#3a3028;
+  --rule:#e0d8cc;
   --rule-light:#ece7dc;
-  --font-d:'Cormorant SC',serif;
-  --font-s:'Cormorant Garamond',Georgia,serif;
-  --font-body:'Source Serif 4','Cormorant Garamond',Georgia,serif;
-  --font-u:'system-ui',-apple-system,sans-serif;
-  --font-i:'Charis SIL','Noto Sans',sans-serif;
+  --sidebar-w:220px;
+
+  --font-ui:'Inter',system-ui,sans-serif;
+  --font-body:'Lora',Georgia,serif;
+  --font-display:'Cormorant SC',serif;
+  --font-ipa:'Charis SIL','Noto Sans',Georgia,sans-serif;
 }
 
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-thumb{background:var(--rule);border-radius:3px}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--rule);border-radius:2px}
 
 /* ══ HERO ══════════════════════════════════════════════════════ */
 #hero{
-  position:relative;height:100vh;min-height:600px;
+  position:relative;height:100vh;min-height:580px;
   background:var(--black);
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
-
-/* layered background glow */
 .h-glow-base{
-  position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 60% at 50% 80%,rgba(80,20,20,.45) 0%,rgba(40,10,10,.2) 50%,transparent 80%);
-  pointer-events:none;z-index:0;
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 50% 80%,rgba(80,20,20,.5) 0%,rgba(30,8,8,.2) 55%,transparent 80%);
 }
-.h-glow-top{
-  position:absolute;inset:0;
-  background:radial-gradient(ellipse 40% 40% at 50% 62%,rgba(139,26,26,.15) 0%,transparent 65%);
-  pointer-events:none;z-index:0;
-}
-
-/* fine grain */
 #hero::after{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='.042'/%3E%3C/svg%3E");
-  opacity:.65;
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  opacity:.6;
 }
-
-#hsvg{
-  position:absolute;inset:0;width:100%;height:100%;
-  pointer-events:none;z-index:0;
+#fade-mask{
+  position:absolute;bottom:0;left:0;right:0;height:50%;
+  background:linear-gradient(to bottom,transparent,var(--black));
+  pointer-events:none;z-index:2;
 }
-
 .h-content{
   position:relative;z-index:2;
   text-align:center;padding:2rem;
-  display:flex;flex-direction:column;align-items:center;
 }
-
 .h-eye{
-  font-family:var(--font-u);font-size:.6rem;letter-spacing:.38em;
-  text-transform:uppercase;color:var(--dust);margin-bottom:2.8rem;
+  font-family:var(--font-ui);font-size:.65rem;letter-spacing:.32em;
+  text-transform:uppercase;color:rgba(154,142,128,.6);margin-bottom:2.5rem;
   opacity:0;animation:fu 1s ease .3s forwards;
 }
 .h-title{
-  font-family:var(--font-d);font-weight:300;
-  font-size:clamp(3rem,9.5vw,7.2rem);line-height:.95;letter-spacing:.1em;
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(3rem,9vw,7rem);line-height:.95;letter-spacing:.1em;
   color:var(--bone);
   opacity:0;animation:fu 1.2s ease .55s forwards;
 }
-.h-title .red{color:var(--crimson)}
+.h-title .red{color:#c0392b}
 .h-sub{
-  font-family:var(--font-s);font-size:clamp(.9rem,1.8vw,1.1rem);
-  font-weight:300;font-style:italic;color:rgba(176,160,144,.75);
-  letter-spacing:.03em;margin-top:1.6rem;line-height:1.6;
+  font-family:var(--font-body);font-size:clamp(.9rem,1.8vw,1.05rem);
+  font-weight:400;font-style:italic;color:rgba(176,160,144,.7);
+  margin-top:1.5rem;line-height:1.6;
   opacity:0;animation:fu 1s ease 1s forwards;
 }
 .h-author{
-  font-family:var(--font-u);font-size:.58rem;letter-spacing:.22em;
-  text-transform:uppercase;color:rgba(154,142,128,.5);
-  margin-top:2.2rem;
+  font-family:var(--font-ui);font-size:.6rem;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(154,142,128,.4);
+  margin-top:2rem;
   opacity:0;animation:fu 1s ease 1.3s forwards;
 }
 .h-scroll{
-  position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);
-  z-index:3;display:flex;flex-direction:column;align-items:center;gap:.45rem;
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  z-index:3;display:flex;flex-direction:column;align-items:center;gap:.4rem;
   opacity:0;animation:fu 1s ease 1.8s forwards;
 }
 .h-scroll span{
-  font-family:var(--font-u);font-size:.55rem;letter-spacing:.28em;
-  text-transform:uppercase;color:rgba(154,142,128,.5);
+  font-family:var(--font-ui);font-size:.55rem;letter-spacing:.25em;
+  text-transform:uppercase;color:rgba(154,142,128,.4);
 }
-.h-line{width:1px;height:42px;
-  background:linear-gradient(to bottom,var(--ember),transparent);
-  animation:sp 2.4s ease infinite}
-
-@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.h-line{
+  width:1px;height:40px;
+  background:linear-gradient(to bottom,#8b1a1a,transparent);
+  animation:sp 2.4s ease infinite;
+}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes sp{0%,100%{opacity:.2}55%{opacity:.9}}
 
-/* ══ SMOOTH SCROLL FADE ═════════════════════════════════════════
-   This replaces the harsh gradient band with a full CSS mask
-   that fades the hero into the content as you scroll            */
-#fade-mask{
-  position:absolute;bottom:0;left:0;right:0;height:50%;
-  background:linear-gradient(to bottom,transparent 0%,var(--black) 100%);
-  pointer-events:none;z-index:2;
-}
-
-/* The hero itself fades out and the content fades in via JS scroll */
-#hero{transition:none} /* JS handles opacity on scroll */
-
-/* content starts right after hero — no gap band */
-#content{
+/* ══ PAGE LAYOUT — left sidebar + content ════════════════════════ */
+#page{
+  display:flex;
+  min-height:100vh;
   background:var(--paper);
-  padding:5rem 3.5rem 10rem;
-  padding-right:calc(210px + 3.5rem);
-  position:relative;
 }
 
-/* ══ TOC ════════════════════════════════════════════════════════ */
-#toc-zone{display:none}
-#toc-tab{display:none}
-#toc{
-  position:fixed;top:0;right:0;width:210px;height:100vh;
-  background:rgba(246,243,238,.97);backdrop-filter:blur(12px);
-  border-left:1px solid var(--rule);
-  padding:2.5rem 1rem 3rem 1.4rem;
-  overflow-y:auto;z-index:199;scrollbar-width:none;
+/* ══ SIDEBAR / TOC ═══════════════════════════════════════════════ */
+#sidebar{
+  position:fixed;
+  top:0;left:0;
+  width:var(--sidebar-w);
+  height:100vh;
+  background:var(--white);
+  border-right:1px solid var(--rule);
+  padding:2rem 0 3rem;
+  overflow-y:auto;
+  z-index:100;
+  scrollbar-width:none;
+  display:flex;
+  flex-direction:column;
 }
-#toc::-webkit-scrollbar{display:none}
+#sidebar::-webkit-scrollbar{display:none}
 
-.toc-brand{
-  font-family:var(--font-u);font-size:.65rem;letter-spacing:.08em;
-  font-weight:600;color:var(--ink2);
-  margin-bottom:1.3rem;padding-bottom:.85rem;
+.sb-brand{
+  padding:0 1.5rem 1.5rem;
   border-bottom:1px solid var(--rule);
+  margin-bottom:1rem;
 }
-#toc nav ul{list-style:none}
-#toc nav a{
-  display:block;
-  font-family:var(--font-u);font-size:.72rem;font-weight:400;
-  color:var(--dust);text-decoration:none;
-  padding:.28rem 0 .28rem .5rem;
-  border-left:2px solid transparent;
-  line-height:1.45;transition:color .15s,border-color .15s;
+.sb-brand h1{
+  font-family:var(--font-display);
+  font-size:.9rem;
+  letter-spacing:.12em;
+  color:var(--ink);
+  line-height:1.3;
+  font-weight:400;
 }
-#toc nav a:hover{color:var(--ink2)}
-#toc nav a.active{color:var(--ember);border-left-color:var(--ember)}
-.toc-lbl{
-  font-family:var(--font-u);font-size:.62rem;font-weight:600;
-  color:var(--ink2);
-  margin-top:1.2rem;margin-bottom:.15rem;padding-left:.5rem;
-}
-.toc-sub a{padding-left:1.2rem;font-size:.69rem}
-.toc-ss  a{padding-left:2rem;font-size:.66rem;color:rgba(154,142,128,.8)}
 
-/* ══ PROGRESS ═══════════════════════════════════════════════════ */
+#sidebar nav ul{list-style:none}
+#sidebar nav li{margin:0}
+
+/* category labels */
+.sb-cat{
+  font-family:var(--font-ui);
+  font-size:.6rem;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--dust);
+  padding:.9rem 1.5rem .25rem;
+  display:block;
+}
+
+/* top-level links */
+#sidebar nav a{
+  display:block;
+  font-family:var(--font-ui);
+  font-size:.78rem;
+  font-weight:400;
+  color:var(--ink2);
+  text-decoration:none;
+  padding:.3rem 1.5rem;
+  border-left:2px solid transparent;
+  transition:color .15s,background .15s,border-color .15s;
+  line-height:1.4;
+}
+#sidebar nav a:hover{
+  background:rgba(139,26,26,.04);
+  color:var(--ember);
+}
+#sidebar nav a.active{
+  color:var(--ember);
+  border-left-color:var(--ember);
+  background:rgba(139,26,26,.05);
+  font-weight:500;
+}
+
+/* sub-level */
+.sb-sub a{
+  padding-left:2.2rem !important;
+  font-size:.74rem !important;
+  color:var(--dust) !important;
+}
+.sb-sub a:hover{color:var(--ink2) !important}
+.sb-sub a.active{color:var(--ember) !important;font-weight:400 !important}
+
+/* sub-sub level */
+.sb-ss a{
+  padding-left:3rem !important;
+  font-size:.7rem !important;
+  color:rgba(154,142,128,.7) !important;
+}
+.sb-ss a:hover{color:var(--ink2) !important}
+.sb-ss a.active{color:var(--ember) !important}
+
+/* ══ MAIN CONTENT ════════════════════════════════════════════════ */
+#content{
+  margin-left:var(--sidebar-w);
+  flex:1;
+  padding:4.5rem 4rem 8rem;
+  max-width:calc(var(--sidebar-w) + 780px);
+}
+
+.ci{max-width:720px}
+
+/* ══ PROGRESS BAR ════════════════════════════════════════════════ */
 #prog{
-  position:fixed;top:0;left:0;right:0;height:2px;
+  position:fixed;top:0;left:var(--sidebar-w);right:0;height:2px;
   background:var(--ember);transform-origin:left;transform:scaleX(0);
   z-index:300;transition:transform .07s linear;
 }
 
-/* ══ CONTENT LAYOUT ══════════════════════════════════════════════ */
-.ci{max-width:780px;margin:0 auto}
+/* ══ TYPOGRAPHY ══════════════════════════════════════════════════ */
 
-/* ── headings ── */
+/* section title */
 h2.st{
-  font-family:var(--font-d);font-size:1.85rem;font-weight:400;
-  color:var(--ink);letter-spacing:.07em;line-height:1.1;
-  margin-bottom:.25rem;margin-top:5rem;
+  font-family:var(--font-display);
+  font-size:1.9rem;font-weight:400;
+  color:var(--ink);letter-spacing:.06em;
+  line-height:1.1;
+  margin-bottom:.2rem;margin-top:4.5rem;
 }
 h2.st:first-child{margin-top:0}
-.sn{
-  display:block;font-family:var(--font-u);font-size:.58rem;
-  letter-spacing:.22em;text-transform:uppercase;
-  color:var(--ember);margin-bottom:.4rem;
-}
-.sr{width:44px;height:2px;background:var(--ember);margin:.9rem 0 2.3rem}
+.sr{width:36px;height:2px;background:var(--ember);margin:.8rem 0 2rem}
 
+/* subsection */
 h3.ss{
-  font-family:var(--font-s);font-size:1.3rem;font-weight:500;
-  color:var(--ink);margin:2.8rem 0 .85rem;letter-spacing:.01em;
-}
-h4.sss{
-  font-family:var(--font-u);font-size:.8rem;font-weight:600;
-  letter-spacing:.04em;color:var(--ink2);
-  margin:2rem 0 .6rem;
-  border-left:3px solid var(--moss);padding-left:.65rem;
-}
-h5.pt{
-  font-family:var(--font-u);font-size:.58rem;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ember);margin:1.6rem 0 .5rem;
+  font-family:var(--font-body);
+  font-size:1.2rem;font-weight:600;
+  color:var(--ink);margin:2.5rem 0 .8rem;
 }
 
-/* ── body text — this is the critical legibility section ── */
-p.bt,div.bt{
+/* sub-subsection */
+h4.sss{
+  font-family:var(--font-ui);
+  font-size:.82rem;font-weight:600;
+  color:var(--ink2);
+  margin:1.8rem 0 .55rem;
+  padding-left:.65rem;
+  border-left:2px solid #5a7a3a;
+}
+
+/* paragraph title */
+h5.pt{
+  font-family:var(--font-ui);
+  font-size:.62rem;font-weight:500;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ember);margin:1.5rem 0 .45rem;
+}
+
+/* body text */
+p.bt{
   font-family:var(--font-body);
-  font-size:1.05rem;
-  line-height:1.85;
-  color:var(--ink);
-  margin-bottom:.9rem;
-  font-weight:400;
-  /* slight optical expansion for small sizes */
-  font-optical-sizing:auto;
+  font-size:1rem;line-height:1.85;
+  color:var(--ink);margin-bottom:.85rem;
 }
 
 em{font-style:italic}
 strong{font-weight:600}
-.ipa{font-family:var(--font-i);font-size:.96em}
 
-/* ── tables — roomy and legible ── */
+/* IPA — use a reliable fallback stack */
+.ipa{
+  font-family:var(--font-ipa);
+  font-size:.95em;
+}
+
+/* ══ TABLES ══════════════════════════════════════════════════════ */
 .tw{
   overflow-x:auto;
-  margin:1.4rem 0 .35rem;
-  border-radius:3px;
-  box-shadow:0 1px 6px rgba(26,22,18,.08),0 0 0 1px rgba(221,213,197,.6);
+  margin:1.3rem 0 .3rem;
+  border-radius:4px;
+  border:1px solid var(--rule);
 }
 table{
   width:100%;border-collapse:collapse;
   font-family:var(--font-body);
-  font-size:.96rem;
-  background:var(--warm-white);
+  font-size:.93rem;
+  background:var(--white);
 }
 thead tr{background:var(--ink)}
 thead th{
-  font-family:var(--font-d);font-size:.68rem;letter-spacing:.1em;
-  color:var(--bone);padding:.75rem 1.1rem;text-align:center;font-weight:400;
+  font-family:var(--font-ui);font-size:.68rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--bone);padding:.7rem 1rem;text-align:center;
 }
 thead tr.sh{background:#252018}
 tbody td{
-  padding:.6rem 1.1rem;text-align:center;
+  padding:.55rem 1rem;text-align:center;
   border-bottom:1px solid var(--rule-light);
   vertical-align:middle;color:var(--ink);
-  font-size:.95rem;line-height:1.5;
+  font-size:.92rem;line-height:1.5;
 }
 tbody tr:last-child td{border-bottom:none}
-tbody tr:hover{background:#f5f0e8}
-td.sd{background:#f0e8d8;color:#7a6a58;font-size:.88rem}
+tbody tr:hover{background:#f9f6f1}
+td.sd{background:#f3ece0;color:#7a6a58;font-size:.86rem;font-style:normal}
 td em{font-style:italic}
 .tc{
-  font-family:var(--font-u);font-size:.65rem;letter-spacing:.05em;
-  color:var(--dust);text-align:center;margin:.4rem 0 1.8rem;
+  font-family:var(--font-ui);font-size:.65rem;
+  color:var(--dust);text-align:center;margin:.35rem 0 1.6rem;
 }
 .tn{
-  font-family:var(--font-u);font-size:.67rem;color:var(--dust);
-  font-style:italic;margin:.3rem 0 .15rem;
+  font-family:var(--font-ui);font-size:.67rem;
+  color:var(--dust);font-style:italic;margin:.25rem 0 .1rem;
 }
 .cc{text-align:center;font-style:italic}
 
-/* ── examples — generous padding, clear hierarchy ── */
+/* ══ EXAMPLES ════════════════════════════════════════════════════ */
 .ex{
-  margin:1rem 0 1.15rem;
-  padding:1rem 1.5rem;
-  background:linear-gradient(135deg,#faf6ef,#f4ecdf);
-  border-left:3px solid var(--ember);
+  margin:.9rem 0 1rem;
+  padding:.85rem 1.4rem;
+  background:#faf6f0;
+  border-left:2px solid var(--ember);
   border-radius:0 3px 3px 0;
 }
-.er{
-  display:flex;gap:2rem;align-items:baseline;
-  margin-bottom:.22rem;
-}
+.er{display:flex;gap:1.8rem;align-items:baseline;margin-bottom:.18rem}
 .er:last-child{margin-bottom:0}
-.ew{
-  font-style:italic;font-family:var(--font-s);
-  font-size:1.05rem;min-width:9rem;color:var(--ink);
-}
-.ei{font-family:var(--font-i);font-size:.88rem;color:var(--dust);min-width:9rem}
-.et{font-size:.88rem;color:#7a6a58;font-family:var(--font-u)}
+.ew{font-style:italic;font-family:var(--font-body);font-size:1rem;min-width:8rem;color:var(--ink)}
+.ei{font-family:var(--font-ipa);font-size:.88rem;color:var(--dust);min-width:8rem}
+.et{font-size:.86rem;color:#7a6a58;font-family:var(--font-ui)}
 
-/* ── transform arrows ── */
-.tf{
-  display:flex;align-items:center;gap:1rem;
-  margin:.65rem 0;flex-wrap:wrap;padding-left:.9rem;
-}
-.tf em{font-style:italic;font-family:var(--font-s);font-size:1.02rem}
-.tf .tt{font-size:.85rem;color:var(--dust);font-family:var(--font-u)}
-.tf .arr{color:var(--ember);font-weight:700;font-size:1rem}
+/* ══ TRANSFORM ARROWS ════════════════════════════════════════════ */
+.tf{display:flex;align-items:center;gap:.9rem;margin:.6rem 0;flex-wrap:wrap;padding-left:.8rem}
+.tf em{font-style:italic;font-family:var(--font-body);font-size:1rem}
+.tf .tt{font-size:.84rem;color:var(--dust);font-family:var(--font-ui)}
+.tf .arr{color:var(--ember);font-weight:600;font-size:.95rem}
 
-/* ── derivation (⇒ style) ── */
-.deriv{
-  display:flex;align-items:baseline;gap:.8rem;
-  padding:.25rem 0 .25rem 1rem;
-  font-family:var(--font-s);font-size:1rem;
-}
-.deriv em{font-style:italic}
-.deriv .dtr{color:var(--dust);font-size:.9rem;font-family:var(--font-u)}
-.deriv .darr{color:var(--ember);font-weight:600}
-
-/* ── quote block ── */
-blockquote.gq{
-  border-left:2px solid var(--rule);
-  margin:1rem 0;padding:.5rem 1.5rem;
-}
+/* ══ QUOTE BLOCK ═════════════════════════════════════════════════ */
+blockquote.gq{border-left:2px solid var(--rule);margin:.9rem 0;padding:.45rem 1.4rem}
 blockquote.gq ul{list-style:none;padding:0}
 blockquote.gq li{
-  margin-bottom:.6rem;
-  font-family:var(--font-body);
-  font-style:italic;font-size:1rem;line-height:1.65;
+  margin-bottom:.55rem;
+  font-family:var(--font-body);font-style:italic;
+  font-size:.98rem;line-height:1.65;
 }
-blockquote.gq li .tr{
-  font-style:normal;color:var(--dust);
-  font-size:.88rem;margin-left:.45rem;
-  font-family:var(--font-u);
-}
+blockquote.gq li .tr{font-style:normal;color:var(--dust);font-size:.86rem;font-family:var(--font-ui);margin-left:.4rem}
 
-/* conjunction items */
+/* ══ CONJUNCTION ITEMS ═══════════════════════════════════════════ */
 .cj{
-  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;
-  padding:.3rem 0 .3rem 1rem;
-  font-family:var(--font-body);font-size:1rem;line-height:1.6;
+  display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;
+  padding:.28rem 0 .28rem .9rem;
+  font-family:var(--font-body);font-size:.97rem;line-height:1.6;
   border-bottom:1px solid var(--rule-light);
 }
 .cj:last-child{border-bottom:none}
-.cj b{font-style:italic;font-weight:600;min-width:4rem}
-.cj .ctr{color:var(--dust);font-size:.9rem;font-family:var(--font-u)}
+.cj b{font-style:italic;font-weight:600;min-width:4rem;font-family:var(--font-body)}
+.cj .ctr{color:var(--dust);font-size:.86rem;font-family:var(--font-ui)}
 .cj em{font-style:italic}
 
-/* ── bullet list ── */
-ul.gl{list-style:none;margin:.7rem 0 1rem;padding:0}
+/* ══ BULLET LIST ═════════════════════════════════════════════════ */
+ul.gl{list-style:none;margin:.65rem 0 .9rem;padding:0}
 ul.gl li{
-  padding:.2rem 0 .2rem 1.15rem;position:relative;
-  font-family:var(--font-body);font-size:1rem;line-height:1.75;
-  color:var(--ink);
+  padding:.18rem 0 .18rem 1.1rem;position:relative;
+  font-family:var(--font-body);font-size:.98rem;line-height:1.72;color:var(--ink);
 }
-ul.gl li::before{
-  content:'✦';position:absolute;left:0;
-  color:var(--ember);font-size:.5rem;top:.48rem;
-}
+ul.gl li::before{content:'–';position:absolute;left:0;color:var(--ember);font-weight:400}
 
-/* determiners block label */
-.det-label{
-  font-family:var(--font-body);font-weight:600;font-size:1rem;
-  margin:1.4rem 0 .35rem;color:var(--ink2);font-style:italic;
-}
-.det-ex{
-  font-family:var(--font-body);font-style:italic;font-size:.98rem;
-  padding:.18rem 0 .18rem 1.1rem;color:var(--ink);line-height:1.6;
-}
-.det-ex .tr{
-  font-style:normal;color:var(--dust);
-  font-size:.88rem;font-family:var(--font-u);
-}
+/* ══ DETERMINER BLOCKS ════════════════════════════════════════════ */
+.det-label{font-family:var(--font-body);font-weight:600;font-style:italic;font-size:.98rem;margin:1.3rem 0 .3rem;color:var(--ink2)}
+.det-ex{font-family:var(--font-body);font-style:italic;font-size:.96rem;padding:.15rem 0 .15rem 1rem;color:var(--ink);line-height:1.6}
+.det-ex .tr{font-style:normal;color:var(--dust);font-size:.86rem;font-family:var(--font-ui)}
 
-/* ── footnotes ── */
+/* ══ SECTION SEPARATOR ════════════════════════════════════════════ */
+.sec-sep{border:none;border-top:1px solid var(--rule-light);margin:4rem 0 0}
+
+/* ══ FOOTNOTES ════════════════════════════════════════════════════ */
 .fn{color:var(--ember);font-size:.72em;vertical-align:super}
-.fns{
-  border-top:1px solid var(--rule);margin-top:3.5rem;padding-top:1.3rem;
-  font-family:var(--font-u);font-size:.72rem;color:var(--dust);line-height:1.75;
-}
+.fns{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1.2rem;font-family:var(--font-ui);font-size:.72rem;color:var(--dust);line-height:1.75}
 
-/* ── audio button ── */
+/* ══ AUDIO BUTTON ════════════════════════════════════════════════ */
 .ab{
   background:none;border:1px solid var(--rule);border-radius:50%;
-  width:24px;height:24px;cursor:pointer;
+  width:22px;height:22px;cursor:pointer;
   display:inline-flex;align-items:center;justify-content:center;
-  color:var(--dust);transition:all .16s;vertical-align:middle;
-  margin-left:3px;font-size:10px;
+  color:var(--dust);transition:all .15s;vertical-align:middle;margin-left:3px;
 }
 .ab:hover{background:var(--ember);border-color:var(--ember);color:#fff}
-.ab svg{width:10px;height:10px;fill:currentColor}
+.ab svg{width:9px;height:9px;fill:currentColor}
 
-/* ── reveal ── */
-.rv{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+/* ══ REVEAL ══════════════════════════════════════════════════════ */
+.rv{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
 .rv.on{opacity:1;transform:none}
 
-/* section separator */
-.sec-sep{
-  border:none;border-top:1px solid var(--rule-light);
-  margin:4rem 0 0;
+/* ══ RESPONSIVE ══════════════════════════════════════════════════ */
+@media(max-width:820px){
+  :root{--sidebar-w:0px}
+  #sidebar{transform:translateX(-220px);width:220px;transition:transform .28s ease}
+  #sidebar.open{transform:translateX(0)}
+  #content{margin-left:0;padding:3rem 1.5rem 6rem}
+  #prog{left:0}
+  #menu-btn{
+    display:flex;position:fixed;bottom:1.5rem;right:1.5rem;
+    z-index:200;background:var(--ink);color:var(--bone);
+    border:none;width:44px;height:44px;border-radius:50%;
+    align-items:center;justify-content:center;
+    cursor:pointer;font-size:1.1rem;
+    box-shadow:0 4px 16px rgba(0,0,0,.25);
+  }
 }
+@media(min-width:821px){#menu-btn{display:none}}
 
-@media(max-width:680px){
-  #content{padding:3rem 1.4rem 6rem}
-  h2.st{font-size:1.5rem}
-  .er{flex-direction:column;gap:.2rem}
-}
+
 </style>
 </head>
 <body>
@@ -399,70 +408,66 @@ ul.gl li::before{
 <!-- ══ HERO ══════════════════════════════════════════════════════ -->
 <section id="hero">
   <div class="h-glow-base"></div>
-  <div class="h-glow-top"></div>
   <div id="fade-mask"></div>
-
-
-
-
   <div class="h-content">
     <p class="h-eye">Gramática de referencia</p>
     <h1 class="h-title">LIAGA<br><span class="red">RECRECENE</span></h1>
     <p class="h-sub">Una lengua descendiente del latín.</p>
     <p class="h-author">M.Z.</p>
   </div>
-
   <div class="h-scroll">
     <span>Leer</span>
     <div class="h-line"></div>
   </div>
 </section>
 
-<!-- ══ TOC ════════════════════════════════════════════════════════ -->
-<div id="toc-zone"></div>
-<div id="toc-tab"></div>
-<aside id="toc">
-  <div class="toc-brand">Liaga Recrecene</div>
-  <nav><ul>
-    <li class="toc-lbl">Ortografía</li>
+<!-- ══ PAGE LAYOUT ════════════════════════════════════════════════ -->
+<div id="page">
+
+<!-- ══ SIDEBAR ════════════════════════════════════════════════════ -->
+<button id="menu-btn" aria-label="Menú">☰</button>
+<nav id="sidebar">
+  <div class="sb-brand"><h1>LIAGA<br>RECRECENE</h1></div>
+  <ul>
+    <li><span class="sb-cat">Ortografía</span></li>
     <li><a href="#alfabeto">Alfabeto</a></li>
-    <li class="toc-sub"><a href="#vocales">Vocales</a></li>
-    <li class="toc-ss"><a href="#vocal-i">La vocal I</a></li>
-    <li class="toc-ss"><a href="#vocal-e">La vocal E</a></li>
-    <li class="toc-ss"><a href="#vocal-u">La vocal U</a></li>
-    <li class="toc-ss"><a href="#diacriticos">Diacríticos</a></li>
-    <li class="toc-sub"><a href="#consonantes">Consonantes</a></li>
-    <li class="toc-ss"><a href="#c-g-x">C, G y X</a></li>
-    <li class="toc-ss"><a href="#digrafos-etim">Dígrafos etimológicos</a></li>
-    <li class="toc-lbl">Morfología</li>
+    <li class="sb-sub"><a href="#vocales">Vocales</a></li>
+    <li class="sb-ss"><a href="#vocal-i">La vocal I</a></li>
+    <li class="sb-ss"><a href="#vocal-e">La vocal E</a></li>
+    <li class="sb-ss"><a href="#vocal-u">La vocal U</a></li>
+    <li class="sb-ss"><a href="#diacriticos">Diacríticos</a></li>
+    <li class="sb-sub"><a href="#consonantes">Consonantes</a></li>
+    <li class="sb-ss"><a href="#c-g-x">C, G y X</a></li>
+    <li class="sb-ss"><a href="#digrafos-etim">Dígrafos etimológicos</a></li>
+    <li><span class="sb-cat">Morfología</span></li>
     <li><a href="#sustantivos">Sustantivos</a></li>
-    <li class="toc-ss"><a href="#nominativo">Nominativo</a></li>
-    <li class="toc-ss"><a href="#genitivo">Genitivo</a></li>
-    <li class="toc-ss"><a href="#dativo">Dativo</a></li>
+    <li class="sb-ss"><a href="#nominativo">Nominativo</a></li>
+    <li class="sb-ss"><a href="#genitivo">Genitivo</a></li>
+    <li class="sb-ss"><a href="#dativo">Dativo</a></li>
     <li><a href="#articulos">Artículos</a></li>
-    <li class="toc-ss"><a href="#art-def">Artículo definido</a></li>
-    <li class="toc-ss"><a href="#art-indef">Artículo indefinido</a></li>
+    <li class="sb-ss"><a href="#art-def">Artículo definido</a></li>
+    <li class="sb-ss"><a href="#art-indef">Artículo indefinido</a></li>
     <li><a href="#pronombres">Pronombres</a></li>
-    <li class="toc-ss"><a href="#pron-pers">Personales</a></li>
-    <li class="toc-ss"><a href="#pron-pos">Posesivos</a></li>
+    <li class="sb-ss"><a href="#pron-pers">Personales</a></li>
+    <li class="sb-ss"><a href="#pron-pos">Posesivos</a></li>
     <li><a href="#adjetivos">Adjetivos</a></li>
-    <li class="toc-lbl">Verbos</li>
+    <li><span class="sb-cat">Verbos</span></li>
     <li><a href="#verbos">Verbos</a></li>
-    <li class="toc-ss"><a href="#infinitivos">Infinitivos</a></li>
-    <li class="toc-ss"><a href="#presente">Presente</a></li>
-    <li class="toc-ss"><a href="#irregulares">Irregulares</a></li>
-    <li class="toc-ss"><a href="#gerundio">Gerundio</a></li>
-    <li class="toc-ss"><a href="#participio">Participio pasivo</a></li>
-    <li class="toc-ss"><a href="#pasado">Pasado</a></li>
-    <li class="toc-ss"><a href="#futuro">Futuro</a></li>
-    <li class="toc-ss"><a href="#negacion">Negación</a></li>
-    <li class="toc-lbl">Otras categorías</li>
+    <li class="sb-ss"><a href="#infinitivos">Infinitivos</a></li>
+    <li class="sb-ss"><a href="#presente">Presente</a></li>
+    <li class="sb-ss"><a href="#irregulares">Irregulares</a></li>
+    <li class="sb-ss"><a href="#gerundio">Gerundio</a></li>
+    <li class="sb-ss"><a href="#participio">Participio pasivo</a></li>
+    <li class="sb-ss"><a href="#pasado">Pasado</a></li>
+    <li class="sb-ss"><a href="#futuro">Futuro</a></li>
+    <li class="sb-ss"><a href="#negacion">Negación</a></li>
+    <li><span class="sb-cat">Otras categorías</span></li>
     <li><a href="#adverbios">Adverbios</a></li>
     <li><a href="#conjunciones">Conjunciones</a></li>
-    <li class="toc-ss"><a href="#subordinadas">Subordinadas</a></li>
+    <li class="sb-ss"><a href="#subordinadas">Subordinadas</a></li>
     <li><a href="#determiners">Determiners</a></li>
-  </ul></nav>
-</aside>
+  </ul>
+</nav>
 
 <!-- ══ CONTENT ════════════════════════════════════════════════════ -->
 <div id="content"><div class="ci">
@@ -1214,6 +1219,7 @@ ul.gl li::before{
 </div>
 
 </div></div><!-- /ci /content -->
+</div><!-- /page -->
 
 <script>
 // ── ALPHABET (updated from docx) ────────────────────────────────
@@ -1261,17 +1267,14 @@ alpha.forEach(([g,afi,nom,ni,ex,xi,tr,au])=>{
 });
 function play(k){new Audio(`audio/${k}.mp3`).play().catch(()=>{})}
 
-// ── SMOOTH HERO PARALLAX FADE ────────────────────────────────────
-// The hero fades out as you scroll into the content — no hard cut
+// ── SMOOTH HERO FADE ─────────────────────────────────────────────
 const hero=document.getElementById('hero');
-const heroH=hero.offsetHeight;
-
 function updateHero(){
   const y=window.scrollY;
-  if(y<=heroH){
-    // fade hero out between 60%–100% of its height
-    const start=heroH*.55;
-    const fade=Math.max(0,Math.min(1,(y-start)/(heroH-start)));
+  const h=hero.offsetHeight;
+  if(y<=h){
+    const start=h*.55;
+    const fade=Math.max(0,Math.min(1,(y-start)/(h-start)));
     hero.style.opacity=1-fade;
   }
 }
@@ -1279,9 +1282,8 @@ window.addEventListener('scroll',updateHero,{passive:true});
 
 // ── PROGRESS + SCROLL SPY ────────────────────────────────────────
 const bar=document.getElementById('prog');
-const links=[...document.querySelectorAll('#toc nav a')];
-const ids=links.map(a=>a.getAttribute('href').slice(1));
-const anchors=ids.map(id=>document.getElementById(id)).filter(Boolean);
+const links=[...document.querySelectorAll('#sidebar a[href]')];
+const anchors=links.map(a=>document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
 
 function onScroll(){
   const y=window.scrollY;
@@ -1293,6 +1295,7 @@ function onScroll(){
   links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
 }
 window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
 
 // ── REVEAL ───────────────────────────────────────────────────────
 const obs=new IntersectionObserver(es=>
@@ -1300,11 +1303,19 @@ const obs=new IntersectionObserver(es=>
   {threshold:.04});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
-// ── TOC SMOOTH CLICK ────────────────────────────────────────────
+// ── SMOOTH CLICK ─────────────────────────────────────────────────
 links.forEach(a=>a.addEventListener('click',e=>{
   const t=document.querySelector(a.getAttribute('href'));
   if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}
 }));
+
+// ── MOBILE MENU ──────────────────────────────────────────────────
+const btn=document.getElementById('menu-btn');
+const sb=document.getElementById('sidebar');
+if(btn){
+  btn.addEventListener('click',()=>sb.classList.toggle('open'));
+  sb.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>sb.classList.remove('open')));
+}
 </script>
 </body>
 </html>
