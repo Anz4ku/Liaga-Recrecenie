@@ -257,7 +257,6 @@ body {
   justify-content: center;
   padding: 2rem .75rem;
   gap: .05rem;
-  border-right: 1px solid var(--border);
 }
 
 .idx-item {
@@ -550,7 +549,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
     <p>Tabla introductoria del alfabeto con valor fonético, nombre, ejemplo y traducción.</p>
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th>Grafema</th><th>AFI</th><th>Nombre</th><th></th><th>Ejemplo</th><th></th><th>Traducción</th><th>Audio</th></tr></thead>
+        <thead><tr><th>Grafema</th><th>AFI</th><th>Nombre</th><th></th><th>Ejemplo</th><th></th><th>Traducción</th></tr></thead>
         <tbody id="atb"></tbody>
       </table>
     </div>
@@ -1307,9 +1306,9 @@ const ALPHA = [
 const isvg = `<svg viewBox="0 0 16 16"><path d="M3 5v6h4l5 5V0L7 5H3z"/></svg>`;
 const tbody = document.getElementById('atb');
 ALPHA.forEach(([g,afi,nom,ni,ex,xi,tr,au]) => {
-  const btnH = au ? `<button class="abtn" onclick="playSound('${au}')">${isvg}</button>` : `<span style="color:#ccc">—</span>`;
+  const btnH = au ? `` : ``;
   const row = document.createElement('tr');
-  row.innerHTML = `<td style="font-family:var(--sans);font-weight:500">${g}</td><td class="ipa">${afi}</td><td><em>${nom}</em></td><td class="ipa" style="color:var(--muted);font-size:.8rem">${ni}</td><td><em>${ex}</em></td><td class="ipa" style="color:var(--muted);font-size:.8rem">${xi}</td><td>${tr}</td><td>${btnH}</td>`;
+  row.innerHTML = `<td style="font-family:var(--sans);font-weight:500">${g}</td><td class="ipa">${afi}</td><td><em>${nom}</em></td><td class="ipa" style="color:var(--muted);font-size:.8rem">${ni}</td><td><em>${ex}</em></td><td class="ipa" style="color:var(--muted);font-size:.8rem">${xi}</td><td>${tr}</td>`;
   tbody.appendChild(row);
 });
 function playSound(k) { new Audio(`audio/${k}.mp3`).play().catch(()=>{}); }
