@@ -91,8 +91,11 @@ body {
   height: 100%;
   flex: 1;
   overflow-x: auto;
+  overflow-y: visible;
   scrollbar-width: none;
   scroll-behavior: smooth;
+  /* must be visible so dropdown can escape */
+  position: static;
 }
 .nav-sections::-webkit-scrollbar { display: none; }
 
@@ -132,20 +135,19 @@ body {
 
 /* dropdown — same serif style as the index */
 .nav-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
+  position: fixed;
+  top: var(--nav-h);
   min-width: 190px;
   background: var(--white);
   border: 1px solid var(--border);
   border-top: none;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   transition: opacity .15s, transform .15s;
-  z-index: 300;
+  z-index: 999;
 }
-.nav-item.open .nav-dropdown {
+.nav-dropdown.open {
   opacity: 1;
   pointer-events: all;
   transform: translateY(0);
@@ -238,29 +240,29 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
   scroll-snap-align: start;
-  display: flex;
+  display: grid;
+  grid-template-columns: 160px 1fr;
 }
 .panel::-webkit-scrollbar { width: 3px; }
 .panel::-webkit-scrollbar-thumb { background: var(--border); }
 
-/* index column — lives inside the panel, travels with it */
+/* index column — sticky, always visible on left */
 .panel-index {
-  flex: none;
-  width: 160px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  padding: 2rem .75rem;
   gap: .05rem;
+  border-right: 1px solid var(--border);
 }
 
 .idx-item {
   font-family: var(--serif);
-  font-size: .85rem;
+  font-size: .82rem;
   font-style: italic;
   color: rgba(17,17,16,.2);
   padding: .2rem 0;
@@ -280,12 +282,12 @@ body {
   font-weight: 500;
 }
 
-/* content column */
+/* content column — centered within its space */
 .panel-inner {
-  flex: 1;
-  min-width: 0;
-  max-width: 720px;
-  padding: 3.5rem 3rem 6rem 0;
+  padding: 3.5rem 4rem 6rem;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 /* ── SECTION HEADER ─────────────────────────────────────────────── */
@@ -499,6 +501,14 @@ ul.glist li::before { content: '—'; position: absolute; left: 0; color: var(--
 }
 .abtn:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
 .abtn svg { width: 8px; height: 8px; fill: currentColor; }
+
+/* word-level audio — subtle, inline */
+.word-audio {
+  width: 15px; height: 15px;
+  opacity: .3;
+  margin-left: 2px;
+}
+.word-audio:hover { opacity: 1; background: var(--red); border-color: var(--red); color: #fff; }
 
 /* ── DIVIDER ────────────────────────────────────────────────────── */
 hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
@@ -1175,6 +1185,9 @@ panelData.forEach(({ idx, label, subs, panel }) => {
   if (subs.length > 1) {
     const drop = document.createElement('div');
     drop.className = 'nav-dropdown';
+    // append to body so no overflow parent can clip it
+    document.body.appendChild(drop);
+
     subs.forEach(sub => {
       const heading = sub.querySelector('h2,h3,h4');
       const a = document.createElement('button');
@@ -1185,21 +1198,27 @@ panelData.forEach(({ idx, label, subs, panel }) => {
         setTimeout(() => {
           panel.scrollTo({ top: sub.offsetTop - 24, behavior: 'smooth' });
         }, 380);
-        item.classList.remove('open');
+        drop.classList.remove('open');
       });
       drop.appendChild(a);
     });
-    item.appendChild(drop);
 
-    // JS hover — reliable across all browsers
     let closeTimer;
-    item.addEventListener('mouseenter', () => {
+    const openDrop = () => {
       clearTimeout(closeTimer);
-      item.classList.add('open');
-    });
-    item.addEventListener('mouseleave', () => {
-      closeTimer = setTimeout(() => item.classList.remove('open'), 120);
-    });
+      // position dropdown under the button using fixed coords
+      const rect = btn.getBoundingClientRect();
+      drop.style.left = rect.left + 'px';
+      drop.classList.add('open');
+    };
+    const closeDrop = () => {
+      closeTimer = setTimeout(() => drop.classList.remove('open'), 140);
+    };
+
+    btn.addEventListener('mouseenter', openDrop);
+    btn.addEventListener('mouseleave', closeDrop);
+    drop.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+    drop.addEventListener('mouseleave', closeDrop);
   }
 
   navEl.appendChild(item);
@@ -1294,6 +1313,54 @@ ALPHA.forEach(([g,afi,nom,ni,ex,xi,tr,au]) => {
   tbody.appendChild(row);
 });
 function playSound(k) { new Audio(`audio/${k}.mp3`).play().catch(()=>{}); }
+
+// ── AUTO AUDIO FOR ALL CONLANG WORDS ─────────────────────────────
+// Any <em> inside .exs, .quotes, .cj, .tf, .dh gets a play button.
+// Same word → same audio file (normalised: lowercase, strip diacritics for filename).
+// File naming: the word itself, lowercased, spaces→underscore.
+// e.g. "vita" → audio/vita.mp3, "a laborà" → audio/a_labora.mp3
+
+function wordToFilename(word) {
+  return word
+    .toLowerCase()
+    .trim()
+    // remove trailing punctuation
+    .replace(/[.,;:!?'"""''\(\)]+$/g, '')
+    .replace(/^['"'"]+/, '')
+    // spaces to underscore
+    .replace(/\s+/g, '_')
+    // strip combining diacritics for simpler filenames (optional)
+    // keep as-is so filenames match exactly what Moises saves
+    ;
+}
+
+const AUDIO_SELECTORS = '.exs em, .quotes li em, .cj em, .tf em';
+const seenWords = new Map(); // filename → first em element (for dedup)
+
+document.querySelectorAll(AUDIO_SELECTORS).forEach(em => {
+  const text = em.textContent.trim();
+  // skip if it's just punctuation or a single symbol
+  if (!text || text.length < 2) return;
+  // skip translation markers like ⇒ →
+  if (/^[⇒→←↔]+$/.test(text)) return;
+
+  const filename = wordToFilename(text);
+  if (!filename) return;
+
+  // create the small audio button
+  const btn = document.createElement('button');
+  btn.className = 'abtn word-audio';
+  btn.title = `Reproducir: ${text}`;
+  btn.innerHTML = `<svg viewBox="0 0 16 16"><path d="M3 5v6h4l5 5V0L7 5H3z"/></svg>`;
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    playSound(filename);
+  });
+
+  // insert right after the <em>
+  em.after(btn);
+  seenWords.set(filename, em);
+});
 
 // ── KEYBOARD ──────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
