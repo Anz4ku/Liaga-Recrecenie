@@ -1438,53 +1438,54 @@ document.addEventListener('keydown', e => {
 });
 
 // ── EDIT MODE ─────────────────────────────────────────────────────
-const REPO  = 'Anz4ku/Liaga-Recrecene';
-const FILE  = 'index.html';
+const REPO   = 'Anz4ku/Liaga-Recrecene';
+const FILE   = 'index.html';
 const BRANCH = 'main';
-
-const editBtn  = document.getElementById('edit-btn');
-const saveBtn  = document.getElementById('save-btn');
-const saveStatus = document.getElementById('save-status');
 let editMode = false;
 
 function getToken() { return localStorage.getItem('gh_token') || ''; }
 
-editBtn.addEventListener('click', () => {
-  if (!getToken()) {
-    const t = prompt('Pega tu token de GitHub (se guarda solo en tu navegador):');
-    if (!t) return;
-    localStorage.setItem('gh_token', t.trim());
-  }
-  editMode = !editMode;
-  document.body.classList.toggle('editing', editMode);
-  editBtn.textContent = editMode ? '✕ Salir' : '✎ Editar';
-  saveBtn.style.display = editMode ? 'flex' : 'none';
+function initEditor() {
+  const editBtn    = document.getElementById('edit-btn');
+  const saveBtn    = document.getElementById('save-btn');
+  const saveStatus = document.getElementById('save-status');
 
-  // make text nodes editable
-  const targets = document.querySelectorAll(
-    '.panel-inner p:not(.section-eyebrow):not(.tbl-note):not(.tbl-cap):not(.label), .panel-inner h2, .panel-inner h3, .panel-inner h4, .panel-inner li, .panel-inner td, .panel-inner .ex-word, .panel-inner .ex-tr, .panel-inner .ex-i'
-  );
-  targets.forEach(el => {
-    el.contentEditable = editMode ? 'true' : 'false';
-    if (editMode) el.classList.add('editable');
-    else el.classList.remove('editable');
+  editBtn.addEventListener('click', () => {
+    if (!getToken()) {
+      const t = prompt('Pega tu token de GitHub (se guarda solo en tu navegador):');
+      if (!t) return;
+      localStorage.setItem('gh_token', t.trim());
+    }
+    editMode = !editMode;
+    document.body.classList.toggle('editing', editMode);
+    editBtn.textContent = editMode ? '✕ Salir' : '✎ Editar';
+    saveBtn.style.display = editMode ? 'flex' : 'none';
+
+    const targets = document.querySelectorAll(
+      '.panel-inner p:not(.section-eyebrow):not(.tbl-note):not(.label), .panel-inner h2, .panel-inner h3, .panel-inner h4, .panel-inner li, .panel-inner td, .panel-inner .ex-word, .panel-inner .ex-tr, .panel-inner .ex-i'
+    );
+    targets.forEach(el => {
+      el.contentEditable = editMode ? 'true' : 'false';
+      if (editMode) el.classList.add('editable');
+      else el.classList.remove('editable');
+    });
+
+    if (!editMode) saveStatus.textContent = '';
   });
 
-  if (!editMode) saveStatus.textContent = '';
-});
+  saveBtn.addEventListener('click', () => saveToGitHub(saveBtn, saveStatus));
+}
 
-saveBtn.addEventListener('click', saveToGitHub);
-
-async function saveToGitHub() {
+async function saveToGitHub(saveBtn, saveStatus) {
   if (!editMode) return;
   const token = getToken();
   if (!token) { alert('No hay token. Sal del modo edición y vuelve a entrar.'); return; }
 
   saveStatus.textContent = 'Guardando…';
+  saveStatus.style.color = 'var(--muted)';
   saveBtn.disabled = true;
 
   try {
-    // get current SHA
     const meta = await fetch(
       `https://api.github.com/repos/${REPO}/contents/${FILE}?ref=${BRANCH}`,
       { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
@@ -1492,18 +1493,13 @@ async function saveToGitHub() {
     if (!meta.ok) throw new Error(`Error ${meta.status}`);
     const { sha } = await meta.json();
 
-    // get full page HTML, remove editable attrs before saving
     const clone = document.documentElement.cloneNode(true);
     clone.querySelectorAll('[contenteditable]').forEach(el => {
       el.removeAttribute('contenteditable');
       el.classList.remove('editable');
     });
-    clone.querySelectorAll('.editing').forEach(el => el.classList.remove('editing'));
-    // remove edit toolbar from saved version
-    const tb = clone.querySelector('#edit-toolbar');
-    if (tb) tb.remove();
+    clone.querySelector('#edit-toolbar')?.remove();
     const html = '<!DOCTYPE html>\n' + clone.outerHTML;
-
     const content = btoa(unescape(encodeURIComponent(html)));
 
     const res = await fetch(
@@ -1514,19 +1510,18 @@ async function saveToGitHub() {
         body: JSON.stringify({ message: 'Edición desde la web', content, sha, branch: BRANCH })
       }
     );
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || `Error ${res.status}`);
-    }
-    saveStatus.textContent = '✓ Guardado — publicando en ~1 min';
+    if (!res.ok) { const err = await res.json(); throw new Error(err.message || `Error ${res.status}`); }
+    saveStatus.textContent = '✓ Guardado';
     saveStatus.style.color = '#2e7d52';
   } catch(e) {
-    saveStatus.textContent = '✗ Error: ' + e.message;
+    saveStatus.textContent = '✗ ' + e.message;
     saveStatus.style.color = '#c0392b';
   } finally {
     saveBtn.disabled = false;
   }
 }
+
+document.addEventListener('DOMContentLoaded', initEditor);
 </script>
 
 <!-- ── EDIT TOOLBAR ──────────────────────────────────────────────── -->
