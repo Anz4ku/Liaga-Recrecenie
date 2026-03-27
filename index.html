@@ -312,26 +312,38 @@ body {
 }
 
 /* ── HEADING HIERARCHY ───────────────────────────────────────────── */
-/* h3 — main section: red */
+/* h3 — main section: black */
 .sub-heading {
   font-family: var(--serif);
   font-size: 1.3rem;
   font-weight: 500;
-  color: var(--red);
+  color: var(--ink);
   margin: 2.8rem 0 .55rem;
   scroll-margin-top: 2rem;
 }
 
-/* h4 — subsection: grey, indented */
+/* h4 — subsection: red, indented */
 .subsub-heading {
   font-family: var(--serif);
   font-size: 1rem;
   font-weight: 500;
   font-style: italic;
-  color: var(--muted);
+  color: var(--red);
   margin: 2rem 0 .4rem;
   padding-left: 1.1rem;
-  border-left: 2px solid var(--border);
+  border-left: 2px solid rgba(192,57,43,.25);
+}
+
+/* .label — deepest level: grey */
+.label {
+  font-family: var(--sans);
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 1.4rem 0 .3rem;
+  padding-left: 1.1rem;
 }
 
 /* .label — deepest level: small caps, red, very compact */
