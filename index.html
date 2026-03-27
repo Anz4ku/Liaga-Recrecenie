@@ -666,6 +666,14 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       </div>
     </div>
 
+    <div id="vocal-ee">
+      <h4 class="subsub-heading">La vocal Ē</h4>
+      <p>Cambia la calidad vocálica de <em>e</em>: se pronuncia <span class="ipa">[ɛ]</span> en lugar de <span class="ipa">[je]</span>.</p>
+      <div class="exs">
+        <div class="ex-row"><div class="ex-top"><span class="ex-word">cēlo</span><span class="ex-i">[ˈt͡sɛ.lo]</span></div><span class="ex-tr">'cielo'</span></div>
+      </div>
+    </div>
+
     <div id="vocal-u">
       <h4 class="subsub-heading">La vocal U</h4>
       <p>Átona y adyacente a vocal, funciona como semiconsonante <span class="ipa">[w]</span>.</p>
@@ -682,11 +690,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <div class="ex-row"><div class="ex-top"><span class="ex-word">ioc</span><span class="ex-i">[jok]</span></div><span class="ex-tr">'juego'</span></div>
         <div class="ex-row"><div class="ex-top"><span class="ex-word">vīa</span><span class="ex-i">[ˈvʲi.a]</span></div><span class="ex-tr">'vía'</span></div>
         <div class="ex-row"><div class="ex-top"><span class="ex-word">veriostī</span><span class="ex-i">[ˈvʲe.rʲo.stʲi]</span></div><span class="ex-tr">'verdades'</span></div>
-      </div>
-      <p class="label">La Ē</p>
-      <p>Después de <em>c</em> indica pronunciación <span class="ipa">[t͡s]</span>.</p>
-      <div class="exs">
-        <div class="ex-row"><div class="ex-top"><span class="ex-word">cēlo</span><span class="ex-i">[ˈt͡sɛ.lo]</span></div><span class="ex-tr">'cielo'</span></div>
       </div>
       <p class="label">La Ĭ</p>
       <p>El breve indica que <em>i</em> no se pronuncia entre consonantes.</p>
@@ -1431,7 +1434,155 @@ document.addEventListener('keydown', e => {
   const c = Math.round(canvas.scrollLeft / window.innerWidth);
   if (e.key === 'ArrowRight' && c < panels.length - 1) scrollToPanel(c + 1);
   if (e.key === 'ArrowLeft'  && c > 0)                 scrollToPanel(c - 1);
+  if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveToGitHub(); }
 });
+
+// ── EDIT MODE ─────────────────────────────────────────────────────
+const REPO  = 'Anz4ku/Liaga-Recrecene';
+const FILE  = 'index.html';
+const BRANCH = 'main';
+
+const editBtn  = document.getElementById('edit-btn');
+const saveBtn  = document.getElementById('save-btn');
+const saveStatus = document.getElementById('save-status');
+let editMode = false;
+
+function getToken() { return localStorage.getItem('gh_token') || ''; }
+
+editBtn.addEventListener('click', () => {
+  if (!getToken()) {
+    const t = prompt('Pega tu token de GitHub (se guarda solo en tu navegador):');
+    if (!t) return;
+    localStorage.setItem('gh_token', t.trim());
+  }
+  editMode = !editMode;
+  document.body.classList.toggle('editing', editMode);
+  editBtn.textContent = editMode ? '✕ Salir' : '✎ Editar';
+  saveBtn.style.display = editMode ? 'flex' : 'none';
+
+  // make text nodes editable
+  const targets = document.querySelectorAll(
+    '.panel-inner p:not(.section-eyebrow):not(.tbl-note):not(.tbl-cap):not(.label), .panel-inner h2, .panel-inner h3, .panel-inner h4, .panel-inner li, .panel-inner td, .panel-inner .ex-word, .panel-inner .ex-tr, .panel-inner .ex-i'
+  );
+  targets.forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+    if (editMode) el.classList.add('editable');
+    else el.classList.remove('editable');
+  });
+
+  if (!editMode) saveStatus.textContent = '';
+});
+
+saveBtn.addEventListener('click', saveToGitHub);
+
+async function saveToGitHub() {
+  if (!editMode) return;
+  const token = getToken();
+  if (!token) { alert('No hay token. Sal del modo edición y vuelve a entrar.'); return; }
+
+  saveStatus.textContent = 'Guardando…';
+  saveBtn.disabled = true;
+
+  try {
+    // get current SHA
+    const meta = await fetch(
+      `https://api.github.com/repos/${REPO}/contents/${FILE}?ref=${BRANCH}`,
+      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
+    );
+    if (!meta.ok) throw new Error(`Error ${meta.status}`);
+    const { sha } = await meta.json();
+
+    // get full page HTML, remove editable attrs before saving
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('[contenteditable]').forEach(el => {
+      el.removeAttribute('contenteditable');
+      el.classList.remove('editable');
+    });
+    clone.querySelectorAll('.editing').forEach(el => el.classList.remove('editing'));
+    // remove edit toolbar from saved version
+    const tb = clone.querySelector('#edit-toolbar');
+    if (tb) tb.remove();
+    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+
+    const content = btoa(unescape(encodeURIComponent(html)));
+
+    const res = await fetch(
+      `https://api.github.com/repos/${REPO}/contents/${FILE}`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Edición desde la web', content, sha, branch: BRANCH })
+      }
+    );
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || `Error ${res.status}`);
+    }
+    saveStatus.textContent = '✓ Guardado — publicando en ~1 min';
+    saveStatus.style.color = '#2e7d52';
+  } catch(e) {
+    saveStatus.textContent = '✗ Error: ' + e.message;
+    saveStatus.style.color = '#c0392b';
+  } finally {
+    saveBtn.disabled = false;
+  }
+}
 </script>
-</body>
-</html>
+
+<!-- ── EDIT TOOLBAR ──────────────────────────────────────────────── -->
+<div id="edit-toolbar">
+  <button id="edit-btn">✎ Editar</button>
+  <button id="save-btn" style="display:none">⬆ Guardar</button>
+  <span id="save-status"></span>
+</div>
+
+<style>
+#edit-toolbar {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  z-index: 999;
+}
+#edit-btn, #save-btn {
+  font-family: var(--sans);
+  font-size: .75rem;
+  font-weight: 500;
+  padding: .5rem 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  transition: all .14s;
+}
+#edit-btn:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+#save-btn { background: #2e7d52; color: #fff; border-color: #2e7d52; }
+#save-btn:hover { background: #236b43; }
+#save-btn:disabled { opacity: .5; cursor: default; }
+#save-status {
+  font-family: var(--sans);
+  font-size: .72rem;
+  color: var(--muted);
+  background: var(--white);
+  padding: .4rem .8rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+body.editing .editable {
+  outline: 1px dashed rgba(192,57,43,.3);
+  border-radius: 2px;
+  cursor: text;
+}
+body.editing .editable:focus {
+  outline: 2px solid var(--red);
+  background: rgba(192,57,43,.03);
+}
+</style>
