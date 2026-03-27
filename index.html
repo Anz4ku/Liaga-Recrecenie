@@ -262,21 +262,23 @@ body {
 /* sub-items under an active section */
 .idx-sub {
   font-size: .72rem;
-  padding: .12rem 0;
+  padding: 0;
   color: rgba(17,17,16,.18);
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height .25s ease, opacity .2s ease;
+  transition: max-height .28s ease, opacity .22s ease, padding .28s ease;
   pointer-events: none;
 }
 .idx-sub.visible {
   max-height: 2rem;
+  padding: .12rem 0;
   opacity: 1;
   pointer-events: all;
 }
+.idx-sub:hover { color: rgba(139,26,26,.5); }
 .idx-sub.active {
-  color: var(--ink);
+  color: var(--red);
   font-style: normal;
   font-weight: 500;
 }
@@ -310,23 +312,23 @@ body {
 }
 
 /* ── HEADING HIERARCHY ───────────────────────────────────────────── */
-/* h3 — main section within panel */
+/* h3 — main section: red */
 .sub-heading {
   font-family: var(--serif);
   font-size: 1.3rem;
   font-weight: 500;
-  color: var(--ink);
+  color: var(--red);
   margin: 2.8rem 0 .55rem;
   scroll-margin-top: 2rem;
 }
 
-/* h4 — subsection: indented, smaller, separator line above */
+/* h4 — subsection: grey, indented */
 .subsub-heading {
   font-family: var(--serif);
   font-size: 1rem;
   font-weight: 500;
   font-style: italic;
-  color: var(--ink2);
+  color: var(--muted);
   margin: 2rem 0 .4rem;
   padding-left: 1.1rem;
   border-left: 2px solid var(--border);
@@ -422,6 +424,9 @@ td em { font-style: italic; font-family: var(--serif); }
   padding: .65rem 1.4rem;
   background: rgba(0,0,0,.028);
   border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .ex-row {
   display: flex;
@@ -429,6 +434,8 @@ td em { font-style: italic; font-family: var(--serif); }
   align-items: baseline;
   padding: .12rem 0;
   justify-content: flex-start;
+  width: 100%;
+  max-width: 32rem;
 }
 .ex-w { font-family: var(--serif); font-style: italic; min-width: 8rem; color: var(--ink); }
 .ex-i { font-family: var(--ipa); font-size: .88rem; color: var(--muted); min-width: 8rem; }
