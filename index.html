@@ -430,16 +430,37 @@ td em { font-style: italic; font-family: var(--serif); }
 }
 .ex-row {
   display: flex;
-  gap: 1.6rem;
-  align-items: baseline;
-  padding: .12rem 0;
-  justify-content: flex-start;
+  gap: 2.5rem;
+  align-items: center;
+  padding: .18rem 0;
   width: 100%;
   max-width: 32rem;
 }
-.ex-w { font-family: var(--serif); font-style: italic; min-width: 8rem; color: var(--ink); }
-.ex-i { font-family: var(--ipa); font-size: .88rem; color: var(--muted); min-width: 8rem; }
-.ex-t { font-family: var(--sans); font-size: .76rem; color: var(--ink2); }
+/* word + translation stacked in one cell */
+.ex-w {
+  display: flex;
+  flex-direction: column;
+  min-width: 8rem;
+}
+.ex-word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.ex-tr {
+  font-family: var(--sans);
+  font-size: .68rem;
+  color: var(--muted);
+  margin-top: .08rem;
+}
+.ex-i {
+  font-family: var(--ipa);
+  font-size: .88rem;
+  color: #666360;
+  min-width: 8rem;
+}
 
 /* ── TRANSFORM ──────────────────────────────────────────────────── */
 .tf {
@@ -574,7 +595,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       </table>
     </div>
     <p class="tbl-note">* [ä], [ɫ], [ɔ], [ɾ] se simplifican a [a], [l], [o], [r].</p>
-    <p class="tbl-cap">Tabla 1 — Alfabeto</p>
   </div>
 
   <!-- VOCALES -->
@@ -593,14 +613,13 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td><em>u</em></td><td class="ipa">[u]</td><td><em>u</em> española</td><td class="ipa">у</td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 2 — Vocales</p>
 
     <div id="vocal-i">
       <h4 class="subsub-heading">La vocal I</h4>
       <p>La vocal <em>i</em> siempre palataliza la consonante precedente.</p>
       <div class="exs">
-        <div class="ex-row"><span class="ex-w">vita</span><span class="ex-i">[vʲi.ta]</span><span class="ex-t">'vida'</span></div>
-        <div class="ex-row"><span class="ex-w">miasi</span><span class="ex-i">[mʲasʲ]</span><span class="ex-t">'mes' (final muda)</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">vita</span><span class="ex-tr">'vida'</span></div><span class="ex-i">[vʲi.ta]</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">miasi</span><span class="ex-tr">'mes' (final muda)</span></div><span class="ex-i">[mʲasʲ]</span></div>
       </div>
     </div>
 
@@ -608,8 +627,8 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <h4 class="subsub-heading">La vocal E</h4>
       <p>Palataliza la consonante precedente y siempre se pronuncia plena.</p>
       <div class="exs">
-        <div class="ex-row"><span class="ex-w">vide</span><span class="ex-i">[ˈvʲi.dʲe]</span><span class="ex-t">'ver'</span></div>
-        <div class="ex-row"><span class="ex-w">cella</span><span class="ex-i">[ˈt͡ɕelːa]</span><span class="ex-t">'celda'</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">vide</span><span class="ex-tr">'ver'</span></div><span class="ex-i">[ˈvʲi.dʲe]</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">cella</span><span class="ex-tr">'celda'</span></div><span class="ex-i">[ˈt͡ɕelːa]</span></div>
       </div>
     </div>
 
@@ -617,7 +636,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <h4 class="subsub-heading">La vocal U</h4>
       <p>Átona y adyacente a vocal, funciona como semiconsonante <span class="ipa">[w]</span>.</p>
       <div class="exs">
-        <div class="ex-row"><span class="ex-w">dua</span><span class="ex-i">[dʷa]</span><span class="ex-t">'dos'</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">dua</span><span class="ex-tr">'dos'</span></div><span class="ex-i">[dʷa]</span></div>
       </div>
     </div>
 
@@ -626,20 +645,20 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <p class="label">La Ī</p>
       <p>El macrón indica que <em>i</em> mantiene valor vocálico pleno en lugar de convertirse en <span class="ipa">[j]</span>.</p>
       <div class="exs">
-        <div class="ex-row"><span class="ex-w">ioc</span><span class="ex-i">[jok]</span><span class="ex-t">'juego'</span></div>
-        <div class="ex-row"><span class="ex-w">vīa</span><span class="ex-i">[ˈvʲi.a]</span><span class="ex-t">'vía'</span></div>
-        <div class="ex-row"><span class="ex-w">veriostī</span><span class="ex-i">[ˈvʲe.rʲo.stʲi]</span><span class="ex-t">'verdades'</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">ioc</span><span class="ex-tr">'juego'</span></div><span class="ex-i">[jok]</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">vīa</span><span class="ex-tr">'vía'</span></div><span class="ex-i">[ˈvʲi.a]</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">veriostī</span><span class="ex-tr">'verdades'</span></div><span class="ex-i">[ˈvʲe.rʲo.stʲi]</span></div>
       </div>
       <p class="label">La Ē</p>
       <p>Después de <em>c</em> indica pronunciación <span class="ipa">[t͡s]</span>.</p>
       <div class="exs">
-        <div class="ex-row"><span class="ex-w">cēlo</span><span class="ex-i">[ˈt͡sɛ.lo]</span><span class="ex-t">'cielo'</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">cēlo</span><span class="ex-tr">'cielo'</span></div><span class="ex-i">[ˈt͡sɛ.lo]</span></div>
       </div>
       <p class="label">La Ĭ</p>
       <p>El breve indica que <em>i</em> no se pronuncia entre consonantes.</p>
       <div class="exs">
-        <div class="ex-row"><span class="ex-w">florĭta</span><span class="ex-i">[ˈflorʲ.ta]</span><span class="ex-t">'la flor'</span></div>
-        <div class="ex-row"><span class="ex-w">cordĭce</span><span class="ex-i">[ˈkor.t͡sɨ]</span><span class="ex-t">'corazón'</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">florĭta</span><span class="ex-tr">'la flor'</span></div><span class="ex-i">[ˈflorʲ.ta]</span></div>
+        <div class="ex-row"><div class="ex-w"><span class="ex-word">cordĭce</span><span class="ex-tr">'corazón'</span></div><span class="ex-i">[ˈkor.t͡sɨ]</span></div>
       </div>
     </div>
   </div>
@@ -672,7 +691,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td><em>sc</em></td><td class="ipa">[ɕː]</td><td><em>sch</em> rusa</td><td class="ipa">щ</td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 3 — Consonantes</p>
 
     <div id="c-g-x">
       <h4 class="subsub-heading">La C, G y X</h4>
@@ -686,7 +704,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
           <tr><td><em>sce, sci</em></td><td class="ipa">[ɕː]</td><td>—</td><td>—</td></tr>
         </tbody>
       </table></div>
-      <p class="tbl-cap">Tabla 4–5 — Palatalización progresiva y dígrafo H</p>
       <p>Palatalización regresiva (precedidas de <em>e</em>, <em>i</em> o <em>ia</em>):</p>
       <div class="tbl-wrap"><table>
         <thead><tr><th>Secuencia</th><th>AFI</th><th>Con H</th><th>AFI</th></tr></thead>
@@ -696,7 +713,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
           <tr><td><em>ex, ix, iax</em></td><td class="ipa">[jesʲ], [isʲ], [jasʲ]</td><td><em>exh, ixh, iaxh</em></td><td class="ipa">[jex], [ix], [jax]</td></tr>
         </tbody>
       </table></div>
-      <p class="tbl-cap">Tabla 6 — Palatalización regresiva</p>
     </div>
 
     <div id="digrafos-etim">
@@ -748,7 +764,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td>neutro</td><td><em>struene</em></td><td class="m">'construcción'</td><td><em>struenia</em></td><td class="m">'construcciones'</td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 7 — Nominativo</p>
   </div>
 
   <div id="genitivo">
@@ -774,7 +789,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td>neutro</td><td><em>struenī</em></td><td class="m">'de la construcción'</td><td><em>struener</em></td><td class="m">'de las construcciones'</td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 8 — Genitivo</p>
   </div>
 
   <div id="dativo">
@@ -800,7 +814,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td>neutro</td><td><em>strueniu</em></td><td class="m">'a la construcción'</td><td><em>struenim</em></td><td class="m">'a las construcciones'</td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 9 — Dativo</p>
   </div>
 
 </div>
@@ -837,7 +850,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td>todos</td><td>pl.</td><td><em>mury</em></td><td class="m">'muros'</td><td><em>muryte</em></td><td class="m">'los muros'</td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 10 — Artículo definido</p>
     <p class="label">Geminación</p>
     <div class="tf"><em>passa<strong>t</strong>o</em><span class="tl">'pasado'</span><span class="arr">→</span><em>passa<strong>tt</strong>o</em><span class="tl">'el pasado'</span></div>
     <p class="label">Vocal epentética</p>
@@ -856,7 +868,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td>Plural</td><td>Todos</td><td><em>vynī</em></td><td><em>vynir</em></td><td><em>vynis</em></td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 11 — Artículo indefinido</p>
   </div>
 
 </div>
@@ -889,7 +900,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td>ellos</td><td><em>ilī</em></td><td><em>le</em></td><td><em>lim</em></td><td><em>leīr</em></td><td><em>licu</em></td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 12 — Pronombres personales</p>
     <h4 class="subsub-heading">Ilo — pronombre neutro</h4>
     <p>Referencia a persona de género desconocido o no relevante.</p>
     <ul class="quotes">
@@ -922,7 +932,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td class="m">su (pl.)</td><td><em>lor</em></td><td><em>lor</em></td><td><em>lor</em></td><td><em>lor</em></td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Tabla 13–14 — Posesivos</p>
   </div>
 
 </div>
@@ -967,7 +976,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <tr><td>neutro</td><td><em>facile</em></td><td class="m">'fácil'</td><td><em>facilia</em></td><td class="m">'fáciles'</td></tr>
     </tbody>
   </table></div>
-  <p class="tbl-cap">Tabla 15 — Adjetivos</p>
 
 </div>
 </div>
@@ -1005,7 +1013,6 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <tr><td>they</td><td><em>ilī</em></td><td><em>laborut</em></td><td><em>muaviat</em></td><td><em>ducut</em></td><td><em>veniut</em></td></tr>
       </tbody>
     </table></div>
-    <p class="tbl-cap">Las cuatro conjugaciones</p>
     <p class="label">Alternancia consonántica (1ª sg.)</p>
     <div class="tbl-wrap"><table>
       <thead><tr><th></th><th></th><th>a siatī</th><th>a crede</th><th>a resiste</th></tr></thead>
