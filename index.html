@@ -192,29 +192,6 @@ body {
 }
 #left-index.hidden { opacity: 0; }
 
-.idx-item {
-  font-family: var(--serif);
-  font-size: .88rem;
-  font-style: italic;
-  color: rgba(17,17,16,.22);
-  padding: .22rem 0;
-  cursor: pointer;
-  pointer-events: all;
-  transition: color .18s;
-  line-height: 1.3;
-  background: none;
-  border: none;
-  text-align: center;
-  display: block;
-  width: 100%;
-}
-.idx-item:hover { color: rgba(17,17,16,.6); }
-.idx-item.active {
-  color: var(--ink);
-  font-style: normal;
-  font-weight: 500;
-}
-
 /* ── HORIZONTAL CANVAS ──────────────────────────────────────────── */
 #canvas {
   position: fixed;
@@ -282,6 +259,28 @@ body {
   font-weight: 500;
 }
 
+/* sub-items under an active section */
+.idx-sub {
+  font-size: .72rem;
+  padding: .12rem 0;
+  color: rgba(17,17,16,.18);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height .25s ease, opacity .2s ease;
+  pointer-events: none;
+}
+.idx-sub.visible {
+  max-height: 2rem;
+  opacity: 1;
+  pointer-events: all;
+}
+.idx-sub.active {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 500;
+}
+
 /* content column — fills all available space with proportional margins */
 .panel-inner {
   padding: 3rem 3rem 6rem 2.5rem;
@@ -290,64 +289,76 @@ body {
 }
 
 /* ── SECTION HEADER ─────────────────────────────────────────────── */
+/* ── SECTION HEADER ─────────────────────────────────────────────── */
 .section-eyebrow {
   font-family: var(--sans);
-  font-size: .65rem;
+  font-size: .6rem;
   font-weight: 500;
-  letter-spacing: .14em;
+  letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: .75rem;
+  margin-bottom: .6rem;
 }
 
 .section-heading {
   font-family: var(--serif);
-  font-size: 2.8rem;
+  font-size: 2.6rem;
   font-weight: 400;
   line-height: 1.1;
   color: var(--ink);
-  margin-bottom: 2.5rem;
+  margin-bottom: 2.8rem;
 }
 
-/* ── SUBSECTION ─────────────────────────────────────────────────── */
+/* ── HEADING HIERARCHY ───────────────────────────────────────────── */
+/* h3 — main section within panel */
 .sub-heading {
   font-family: var(--serif);
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: var(--ink);
-  margin: 2.5rem 0 .6rem;
-  scroll-margin-top: 3rem;
+  margin: 2.8rem 0 .55rem;
+  scroll-margin-top: 2rem;
 }
-.sub-heading:first-of-type { margin-top: 0; }
 
+/* h4 — subsection: indented, smaller, separator line above */
 .subsub-heading {
-  font-family: var(--sans);
-  font-size: .7rem;
+  font-family: var(--serif);
+  font-size: 1rem;
   font-weight: 500;
-  letter-spacing: .1em;
-  text-transform: uppercase;
+  font-style: italic;
   color: var(--ink2);
-  margin: 2rem 0 .5rem;
+  margin: 2rem 0 .4rem;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--border);
 }
 
+/* .label — deepest level: small caps, red, very compact */
 .label {
   font-family: var(--sans);
-  font-size: .65rem;
-  font-weight: 500;
-  letter-spacing: .12em;
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--red);
-  margin: 1.5rem 0 .4rem;
+  margin: 1.4rem 0 .3rem;
+  padding-left: 1.1rem;
 }
 
 /* ── BODY TEXT ──────────────────────────────────────────────────── */
 p {
   font-family: var(--serif);
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.82;
   color: var(--ink);
-  margin-bottom: .75rem;
+  margin-bottom: .7rem;
 }
+
+/* paragraphs inside a subsub context get slight indent */
+.subsub-heading + p,
+.label + p {
+  padding-left: 1.1rem;
+}
+
 em { font-style: italic; }
 strong { font-weight: 500; }
 .ipa { font-family: var(--ipa); font-size: .95em; }
@@ -407,20 +418,21 @@ td em { font-style: italic; font-family: var(--serif); }
 
 /* ── EXAMPLES ───────────────────────────────────────────────────── */
 .exs {
-  margin: .8rem 0 .9rem;
-  padding: .75rem 1.1rem;
-  background: var(--off);
-  border-left: 2px solid var(--red);
+  margin: .75rem 0 1rem;
+  padding: .65rem 1.4rem;
+  background: rgba(0,0,0,.028);
+  border-radius: 3px;
 }
 .ex-row {
   display: flex;
-  gap: 1.4rem;
+  gap: 1.6rem;
   align-items: baseline;
-  padding: .08rem 0;
+  padding: .12rem 0;
+  justify-content: flex-start;
 }
-.ex-w { font-family: var(--serif); font-style: italic; min-width: 7.5rem; }
-.ex-i { font-family: var(--ipa); font-size: .85rem; color: var(--muted); min-width: 7.5rem; }
-.ex-t { font-family: var(--sans); font-size: .78rem; color: var(--ink2); }
+.ex-w { font-family: var(--serif); font-style: italic; min-width: 8rem; color: var(--ink); }
+.ex-i { font-family: var(--ipa); font-size: .88rem; color: var(--muted); min-width: 8rem; }
+.ex-t { font-family: var(--sans); font-size: .76rem; color: var(--ink2); }
 
 /* ── TRANSFORM ──────────────────────────────────────────────────── */
 .tf {
@@ -1138,42 +1150,73 @@ const navPrev = document.getElementById('nav-prev');
 const navNext = document.getElementById('nav-next');
 
 // ── COLLECT PANEL DATA ────────────────────────────────────────────
+// Build a two-level tree: top-level sections (h3) and their children (h4+)
 const panelData = panels.map((panel, i) => {
   const inner = panel.querySelector('.panel-inner');
-  // anchors with a heading inside them
-  const subs = [...panel.querySelectorAll('[id]')]
-    .filter(el => el.querySelector('h2,h3,h4'));
-  return { panel, inner, idx: i, label: panel.dataset.label, subs };
+
+  // top-level anchored divs with an h3
+  const sections = [...panel.querySelectorAll('[id]')]
+    .filter(el => el.querySelector(':scope > h3.sub-heading, :scope > h2.section-heading'));
+
+  // for each section, collect its child anchors with h4
+  const tree = sections.map(sec => {
+    const children = [...sec.querySelectorAll('[id]')]
+      .filter(el => el !== sec && el.querySelector(':scope > h4.subsub-heading'));
+    return { el: sec, children };
+  });
+
+  return { panel, inner, idx: i, label: panel.dataset.label, tree };
 });
 
 // ── BUILD PANEL INDEXES ───────────────────────────────────────────
-panelData.forEach(({ panel, subs, idx }) => {
+panelData.forEach(({ panel, tree }) => {
   const indexEl = panel.querySelector('.panel-index');
-  if (!indexEl || subs.length <= 1) { if(indexEl) indexEl.style.display='none'; return; }
+  if (!indexEl) return;
+  if (tree.length === 0) { indexEl.style.display = 'none'; return; }
 
-  subs.forEach(sub => {
-    const heading = sub.querySelector('h2,h3,h4');
+  tree.forEach(({ el: sec, children }) => {
+    const heading = sec.querySelector('h2,h3');
+    if (!heading) return;
+
     const btn = document.createElement('button');
     btn.className = 'idx-item';
     btn.textContent = heading.textContent;
-    btn.dataset.id = sub.id;
-    btn.addEventListener('click', () => {
-      // scroll within the panel vertically
-      panel.scrollTo({ top: sub.offsetTop - 24, behavior: 'smooth' });
-    });
+    btn.dataset.id = sec.id;
+    btn.addEventListener('click', () =>
+      panel.scrollTo({ top: sec.offsetTop - 24, behavior: 'smooth' }));
     indexEl.appendChild(btn);
+
+    children.forEach(child => {
+      const ch = child.querySelector('h4');
+      if (!ch) return;
+      const sub = document.createElement('button');
+      sub.className = 'idx-item idx-sub';
+      sub.textContent = ch.textContent;
+      sub.dataset.id = child.id;
+      sub.dataset.parent = sec.id;
+      sub.addEventListener('click', () =>
+        panel.scrollTo({ top: child.offsetTop - 24, behavior: 'smooth' }));
+      indexEl.appendChild(sub);
+    });
   });
 
-  // first item active by default
-  indexEl.querySelector('.idx-item')?.classList.add('active');
+  indexEl.querySelector('.idx-item:not(.idx-sub)')?.classList.add('active');
+  // reveal subs of first active section
+  const firstId = tree[0]?.el.id;
+  if (firstId) indexEl.querySelectorAll(`.idx-sub[data-parent="${firstId}"]`)
+    .forEach(s => s.classList.add('visible'));
 });
 
 // ── BUILD TOP NAV ─────────────────────────────────────────────────
-panelData.forEach(({ idx, label, subs, panel }) => {
+panelData.forEach(({ idx, label, tree, panel }) => {
   const item = document.createElement('div');
   item.className = 'nav-item';
 
-  const chevron = subs.length > 1
+  // flatten tree for dropdown
+  const allSubs = tree.flatMap(({ el, children }) => [el, ...children])
+    .filter(el => el.querySelector('h2,h3,h4'));
+
+  const chevron = allSubs.length > 1
     ? ` <svg width="7" height="7" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5l3 3 3-3"/></svg>`
     : '';
   const btn = document.createElement('button');
@@ -1182,22 +1225,22 @@ panelData.forEach(({ idx, label, subs, panel }) => {
   btn.addEventListener('click', () => scrollToPanel(idx));
   item.appendChild(btn);
 
-  if (subs.length > 1) {
+  if (allSubs.length > 1) {
     const drop = document.createElement('div');
     drop.className = 'nav-dropdown';
-    // append to body so no overflow parent can clip it
     document.body.appendChild(drop);
 
-    subs.forEach(sub => {
+    allSubs.forEach(sub => {
       const heading = sub.querySelector('h2,h3,h4');
       const a = document.createElement('button');
       a.className = 'nav-drop-item';
+      // indent h4 items visually
+      const isH4 = !!sub.querySelector(':scope > h4');
+      if (isH4) a.style.paddingLeft = '1.8rem';
       a.textContent = heading.textContent;
       a.addEventListener('click', () => {
         scrollToPanel(idx);
-        setTimeout(() => {
-          panel.scrollTo({ top: sub.offsetTop - 24, behavior: 'smooth' });
-        }, 380);
+        setTimeout(() => panel.scrollTo({ top: sub.offsetTop - 24, behavior: 'smooth' }), 380);
         drop.classList.remove('open');
       });
       drop.appendChild(a);
@@ -1206,15 +1249,11 @@ panelData.forEach(({ idx, label, subs, panel }) => {
     let closeTimer;
     const openDrop = () => {
       clearTimeout(closeTimer);
-      // position dropdown under the button using fixed coords
       const rect = btn.getBoundingClientRect();
       drop.style.left = rect.left + 'px';
       drop.classList.add('open');
     };
-    const closeDrop = () => {
-      closeTimer = setTimeout(() => drop.classList.remove('open'), 140);
-    };
-
+    const closeDrop = () => { closeTimer = setTimeout(() => drop.classList.remove('open'), 140); };
     btn.addEventListener('mouseenter', openDrop);
     btn.addEventListener('mouseleave', closeDrop);
     drop.addEventListener('mouseenter', () => clearTimeout(closeTimer));
@@ -1237,23 +1276,39 @@ function scrollToPanel(idx) {
 
 // ── SCROLL SPY ────────────────────────────────────────────────────
 function updateSpy(panelIdx) {
-  const { panel, subs } = panelData[panelIdx];
-  if (!subs.length) return;
+  const { panel, tree } = panelData[panelIdx];
+  if (!tree.length) return;
 
   const scrollTop  = panel.scrollTop;
   const atBottom   = scrollTop + panel.clientHeight >= panel.scrollHeight - 8;
-  let activeId     = subs[0].id;
+  const allItems   = tree.flatMap(({ el, children }) => [el, ...children]);
 
+  // find active item
+  let activeEl = allItems[0];
   if (atBottom) {
-    activeId = subs[subs.length - 1].id;
+    activeEl = allItems[allItems.length - 1];
   } else {
-    subs.forEach(sub => {
-      if (scrollTop >= sub.offsetTop - 160) activeId = sub.id;
+    allItems.forEach(el => {
+      if (scrollTop >= el.offsetTop - 160) activeEl = el;
     });
   }
 
-  panel.querySelectorAll('.idx-item').forEach(b => {
-    b.classList.toggle('active', b.dataset.id === activeId);
+  // find which top-level section activeEl belongs to
+  const activeSection = tree.find(({ el, children }) =>
+    el === activeEl || children.includes(activeEl));
+
+  const indexEl = panel.querySelector('.panel-index');
+  if (!indexEl) return;
+
+  indexEl.querySelectorAll('.idx-item:not(.idx-sub)').forEach(btn => {
+    const isActive = btn.dataset.id === activeSection?.el.id;
+    btn.classList.toggle('active', isActive);
+  });
+
+  indexEl.querySelectorAll('.idx-sub').forEach(sub => {
+    const parentActive = sub.dataset.parent === activeSection?.el.id;
+    sub.classList.toggle('visible', parentActive);
+    sub.classList.toggle('active', sub.dataset.id === activeEl.id);
   });
 }
 
