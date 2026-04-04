@@ -6,7 +6,7 @@
 <title>Liaga Recrecenie</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
 <style>
 
 /* ── RESET ─────────────────────────────────────────────────────── */
@@ -22,6 +22,7 @@ html { font-size: 20px; }
   --ink2:    #555250;
   --muted:   #999693;
   --red:     #c0392b;
+  --tbl-head: #111110;
 
   --serif:   'Crimson Pro', Georgia, serif;
   --sans:    'DM Sans', system-ui, sans-serif;
@@ -30,6 +31,58 @@ html { font-size: 20px; }
   --nav-h:   56px;
   --sub-h:   40px;
 }
+
+/* ── MODO OSCURO (defecto) ── */
+body.dark-mode {
+  --white:   #141414;
+  --off:     #1d1d1d;
+  --border:  #2c2c2c;
+  --ink:     #e0dcd7;
+  --ink2:    #b0ada9;
+  --muted:   #8a8784;
+  --tbl-head: #252320;
+}
+body.dark-mode .nav-btn             { color: rgba(224,220,215,.7); }
+body.dark-mode .nav-btn:hover       { color: rgba(224,220,215,.95); }
+body.dark-mode .nav-btn.active      { color: var(--ink); border-bottom-color: var(--ink); }
+body.dark-mode .nav-drop-item       { color: rgba(224,220,215,.68); }
+body.dark-mode .nav-drop-item:hover { color: var(--ink); }
+body.dark-mode .idx-item            { color: rgba(224,220,215,.68); }
+body.dark-mode .idx-item:hover      { color: rgba(224,220,215,.95); }
+body.dark-mode .idx-item.active     { color: var(--ink); }
+body.dark-mode .idx-sub             { color: rgba(224,220,215,.62); }
+body.dark-mode .idx-sub:hover       { color: rgba(230,100,100,.95); }
+body.dark-mode .idx-sub.active      { color: #e06868; }
+body.dark-mode thead tr             { background: var(--tbl-head); }
+body.dark-mode thead tr.sh          { background: #1c1a18; }
+body.dark-mode tbody tr:hover       { background: var(--off); }
+body.dark-mode .nav-action-btn      { color: rgba(224,220,215,.68); }
+body.dark-mode .nav-action-btn:hover { color: var(--ink); }
+body.dark-mode .nav-action-menu     { background: #1a1a1a; border-color: var(--border); }
+body.dark-mode .nav-action-menu-item { color: rgba(224,220,215,.68); border-bottom-color: var(--border); }
+body.dark-mode .nav-action-menu-item:hover { color: var(--ink); }
+
+/* ── FONOLOGÍA dark mode ── */
+/* Gráfico de vocales SVG */
+body.dark-mode #vow-chart line               { stroke: rgba(224,220,215,.25); }
+body.dark-mode #vow-chart text:not(.vow)     { fill: var(--muted); }
+body.dark-mode #vow-chart .vow               { fill: var(--ink); stroke: var(--white); }
+/* Tabla de consonantes */
+body.dark-mode .cons-tbl th,
+body.dark-mode .cons-tbl td                  { border-color: var(--border); }
+body.dark-mode .cons-tbl thead tr:first-child th { background: #252320; color: var(--ink); }
+body.dark-mode .cons-tbl thead tr:last-child th  { background: var(--off); color: var(--muted); }
+body.dark-mode .cons-tbl .mn                 { background: var(--off); color: var(--ink); }
+body.dark-mode .cons-tbl td.ipa              { color: var(--ink); }
+
+/* ── BOTÓN TEMA ── */
+#theme-btn {
+  height: 100%; padding: 0 .9rem;
+  background: none; border: none; border-left: 1px solid var(--border);
+  cursor: pointer; font-size: .95rem; color: var(--muted);
+  transition: color .15s; flex-shrink: 0; display: flex; align-items: center;
+}
+#theme-btn:hover { color: var(--ink); }
 
 body {
   font-family: var(--serif);
@@ -289,7 +342,7 @@ body {
   pointer-events: none;
 }
 .idx-sub.visible {
-  max-height: 2rem;
+  max-height: 4rem;
   padding: .12rem 0;
   opacity: 1;
   pointer-events: all;
@@ -401,7 +454,7 @@ table {
   font-size: .82rem;
   background: var(--white);
 }
-thead tr { background: var(--ink); }
+thead tr { background: var(--tbl-head); }
 thead th {
   font-size: .63rem;
   font-weight: 500;
@@ -750,10 +803,464 @@ ul.glist li::before { content: '—'; position: absolute; left: 0; color: var(--
 .con { cursor: pointer; transition: opacity .12s; }
 .con:hover { opacity: .4; }
 
+/* ── PORTADA ─────────────────────────────────────────────────────── */
+/* Custom cursor */
+#cv-cursor {
+  position: fixed; top: 0; left: 0; z-index: 99999;
+  width: 48px; pointer-events: none;
+  opacity: 0; transition: opacity .3s;
+}
+body.cursor-active { cursor: none !important; }
+body.cursor-active * { cursor: none !important; }
+
+/* ── FICHA IPA ───────────────────────────────────────────────────── */
+#ipa-card {
+  position: fixed; z-index: 99990; pointer-events: none;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,.1);
+  border-top: 2px solid #c81020;
+  padding: .85rem 1.1rem .7rem;
+  min-width: 155px; max-width: 210px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .15s, transform .15s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column; gap: .25rem;
+}
+#ipa-card.visible { opacity: 1; transform: translateY(0); }
+#ipa-card .ic-sym {
+  font-family: var(--ipa); font-size: 2.2rem; color: #fff;
+  line-height: 1; text-align: center;
+  padding-bottom: .5rem; margin-bottom: .2rem;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+#ipa-card .ic-desc {
+  font-family: var(--sans); font-size: .62rem;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(220,215,210,.65);
+}
+#ipa-card .ic-gr {
+  font-family: var(--serif); font-size: .82rem;
+  color: rgba(220,215,210,.85);
+}
+#ipa-card .ic-hint {
+  font-family: var(--sans); font-size: .58rem;
+  letter-spacing: .1em; color: #c81020;
+  margin-top: .15rem;
+  cursor: pointer;
+}
+#ipa-card .ic-cite {
+  display: none;
+  font-family: var(--sans); font-size: .58rem;
+  color: rgba(220,215,210,.6);
+  line-height: 1.5;
+  border-top: 1px solid rgba(255,255,255,.08);
+  margin-top: .3rem; padding-top: .35rem;
+}
+#ipa-card.cite-open .ic-cite { display: block; }
+#ipa-card .ic-video {
+  display: none;
+  width: 100%; border-radius: 3px;
+  margin: .35rem 0 .1rem;
+  background: #000;
+}
+#ipa-card.has-video { min-width: 185px; max-width: 230px; }
+#ipa-card.has-video .ic-video { display: block; }
+
+
+#cover {
+  position: fixed; inset: 0; z-index: 9000;
+  background: #080808;
+  overflow-y: auto; overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  user-select: none;
+  transition: opacity .7s cubic-bezier(.4,0,.2,1);
+}
+/* Hero section inside cover */
+.cv-hero {
+  height: 100dvh; min-height: 600px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  scroll-snap-align: start;
+}
+/* Scroll hint */
+.cv-scroll-hint {
+  position: absolute; bottom: 2.2rem; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--sans), system-ui; font-size: .55rem;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(255,255,255,.2);
+  display: flex; flex-direction: column; align-items: center; gap: .6rem;
+  animation: cvRise 1.2s ease .9s both;
+  pointer-events: none;
+}
+.cv-scroll-hint::after {
+  content: ''; display: block; width: 1px; height: 36px;
+  background: linear-gradient(to bottom, rgba(200,16,32,.4), transparent);
+  animation: cvRise 1s ease 1.3s both;
+}
+/* Acknowledgements inside cover */
+.cv-ack {
+  min-height: 100dvh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 5rem clamp(2rem, 8vw, 7rem);
+  scroll-snap-align: start;
+  position: relative; z-index: 1;
+}
+.cv-ack-inner { max-width: 620px; width: 100%; }
+.cv-ack-title {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 400;
+  color: #fff; margin-bottom: 2.4rem;
+  letter-spacing: .02em;
+  text-shadow: 0 2px 24px rgba(0,0,0,.7);
+}
+.cv-ack-text {
+  display: flex; flex-direction: column; gap: 1.6rem;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+  line-height: 1.9; color: #fff;
+  text-shadow: 0 1px 16px rgba(0,0,0,.85);
+}
+.cv-ack-text p {
+  color: #fff;
+  text-shadow: 0 1px 16px rgba(0,0,0,.85);
+}
+.cv-ack::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 55% 45% at 50% 55%, rgba(160,8,20,.15) 0%, transparent 70%);
+}
+/* Radial bloom — center glow + bottom warmth */
+#cover::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 38% at 50% 44%, rgba(190,10,22,.3) 0%, transparent 68%),
+    radial-gradient(ellipse 70% 50% at 50% 110%, rgba(180,8,20,.22) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 82% 85%, rgba(140,5,15,.15) 0%, transparent 60%);
+  animation: gradflow 9s ease-in-out infinite alternate;
+}
+@keyframes gradflow {
+  from { opacity: .7; }
+  to   { opacity: 1; }
+}
+/* Film grain overlay */
+#cover::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: .05; mix-blend-mode: overlay;
+}
+#cover.out { opacity: 0; pointer-events: none; }
+
+/* Corner brackets */
+.cv-corner {
+  position: absolute; width: 22px; height: 22px; pointer-events: none;
+  animation: cvRise 1.4s cubic-bezier(0.22,1,0.36,1) .05s both;
+}
+.cv-corner--tl { top: 22px; left: 22px; border-top: 1px solid rgba(200,16,32,.35); border-left: 1px solid rgba(200,16,32,.35); }
+.cv-corner--tr { top: 22px; right: 22px; border-top: 1px solid rgba(200,16,32,.35); border-right: 1px solid rgba(200,16,32,.35); }
+.cv-corner--bl { bottom: 22px; left: 22px; border-bottom: 1px solid rgba(200,16,32,.35); border-left: 1px solid rgba(200,16,32,.35); }
+.cv-corner--br { bottom: 22px; right: 22px; border-bottom: 1px solid rgba(200,16,32,.35); border-right: 1px solid rgba(200,16,32,.35); }
+
+/* (watermark removed) */
+
+/* (thistle removed) */
+
+/* Content */
+.cv-inner {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+}
+.cv-label {
+  font-family: var(--sans), system-ui, sans-serif;
+  font-size: .58rem; letter-spacing: .28em; text-transform: uppercase;
+  color: #c81020; margin-bottom: 1.4rem;
+  animation: cvRise 1s cubic-bezier(0.22,1,0.36,1) .1s both;
+}
+.cv-title {
+  display: flex; flex-direction: column;
+  font-family: 'EB Garamond', var(--serif), Georgia, serif;
+  font-weight: 400; margin: 0;
+}
+.cv-title-top {
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  font-weight: 300; letter-spacing: .18em;
+  color: rgba(255,255,255,.6); line-height: 1;
+  text-transform: uppercase;
+  animation: cvRise 1s cubic-bezier(0.22,1,0.36,1) .18s both;
+}
+.cv-title-bot {
+  font-size: clamp(3rem, 8vw, 7rem);
+  letter-spacing: -.01em; color: #fff; line-height: .88;
+  text-transform: uppercase;
+  animation: cvRise 1s cubic-bezier(0.22,1,0.36,1) .26s both;
+}
+@keyframes cvRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes cvRiseCenter {
+  from { opacity: 0; transform: translateX(-50%) translateY(14px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.cv-rule {
+  display: flex; align-items: center; gap: .8rem;
+  margin: 1.8rem auto 2rem;
+  animation: cvRise 1s cubic-bezier(0.22,1,0.36,1) .34s both;
+}
+.cv-rule::before, .cv-rule::after {
+  content: ''; display: block; width: 32px; height: 1px; background: rgba(200,16,32,.45);
+}
+.cv-rule-diamond { width: 5px; height: 5px; background: #c81020; transform: rotate(45deg); }
+.cv-flag {
+  width: clamp(160px, 22vw, 280px);
+  margin: 1.4rem 0 0;
+  animation: cvRise 1s cubic-bezier(0.22,1,0.36,1) .34s both;
+}
+.cv-btns {
+  display: flex; align-items: center; gap: 2.4rem;
+}
+.cv-btns--top {
+  position: absolute; top: 2rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  animation: cvRiseCenter 1s cubic-bezier(0.22,1,0.36,1) .42s both;
+}
+.cv-sep { width: 1px; height: 14px; background: rgba(255,255,255,.1); }
+.cv-btn {
+  background: none; border: none; padding: 0;
+  font-family: var(--sans), system-ui, sans-serif;
+  font-size: .67rem; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,255,255,.38); cursor: none; position: relative;
+  transition: color .2s;
+}
+.cv-btn::after {
+  content: ''; position: absolute;
+  left: 0; bottom: -3px; width: 100%; height: 1px;
+  background: #c81020;
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform .25s cubic-bezier(.4,0,.2,1);
+}
+.cv-btn:hover { color: #fff; }
+.cv-btn:hover::after { transform: scaleX(1); }
+
+/* Dropdown */
+.cv-dropdown { position: relative; }
+.cv-menu {
+  position: absolute;
+  top: calc(100% + .15rem); left: 50%;
+  min-width: 220px;
+  background: #0f0f0f; border: 1px solid rgba(255,255,255,.07);
+  border-top: 2px solid #c81020;
+  padding: .5rem 0;
+  opacity: 0; pointer-events: none;
+  transform: translateX(-50%) translateY(-8px);
+  transition: opacity .2s .1s, transform .2s .1s cubic-bezier(.4,0,.2,1);
+  text-align: left;
+}
+.cv-dropdown:hover .cv-menu {
+  transition: opacity .15s, transform .15s cubic-bezier(.4,0,.2,1);
+}
+.cv-dropdown:hover .cv-menu {
+  opacity: 1; pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.cv-menu-item {
+  display: block; width: 100%; border: none; background: none;
+  padding: .55rem 1.4rem; cursor: none;
+  font-family: var(--sans), system-ui, sans-serif;
+  font-size: .75rem; letter-spacing: .02em; white-space: nowrap;
+  color: rgba(255,255,255,.4); text-align: left;
+  transition: color .12s, background .12s;
+}
+.cv-menu-item:hover { color: #fff; background: rgba(200,16,32,.1); }
+
+/* Floating orbs — bokeh-style, animated */
+.cv-orb-layer {
+  position: sticky; top: 0; height: 0; overflow: visible;
+  pointer-events: none; z-index: 0;
+}
+.cv-orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  will-change: transform;
+}
+.cv-orb--1 {
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(210,18,34,.34) 0%, rgba(180,10,24,.1) 45%, transparent 70%);
+  filter: blur(70px);
+  left: 5%; top: 5%; opacity: .75;
+  animation: orbA 4s ease-in-out infinite;
+}
+.cv-orb--2 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(160,6,20,.3) 0%, rgba(130,4,16,.08) 45%, transparent 70%);
+  filter: blur(60px);
+  right: 5%; bottom: 8%; opacity: .65;
+  animation: orbB 5s ease-in-out infinite;
+  animation-delay: -2s;
+}
+.cv-orb--3 {
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(200,8,28,.26) 0%, transparent 68%);
+  filter: blur(48px);
+  left: 55%; top: 8%; opacity: .55;
+  animation: orbC 6s ease-in-out infinite;
+  animation-delay: -3s;
+}
+.cv-orb--4 {
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(220,20,40,.2) 0%, transparent 68%);
+  filter: blur(42px);
+  left: 22%; bottom: 12%; opacity: .5;
+  animation: orbA 4.5s ease-in-out infinite reverse;
+  animation-delay: -1s;
+}
+@keyframes orbA {
+  0%   { transform: translate(0,0);       }
+  30%  { transform: translate(60px,-45px); }
+  60%  { transform: translate(-30px,55px); }
+  100% { transform: translate(0,0);       }
+}
+@keyframes orbB {
+  0%   { transform: translate(0,0);        }
+  25%  { transform: translate(-55px, 40px); }
+  55%  { transform: translate(40px,-50px);  }
+  80%  { transform: translate(-20px,20px);  }
+  100% { transform: translate(0,0);        }
+}
+@keyframes orbC {
+  0%   { transform: translate(0,0)      scale(1);   }
+  40%  { transform: translate(35px,50px) scale(1.1); }
+  70%  { transform: translate(-40px,-30px) scale(.9); }
+  100% { transform: translate(0,0)      scale(1);   }
+}
+
+/* Bottom info strip */
+.cv-bottom {
+  position: absolute; bottom: 26px; left: 0; right: 0;
+  display: flex; align-items: center; gap: 1.2rem; padding: 0 28px;
+  font-family: var(--sans), system-ui, sans-serif;
+  font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(255,255,255,.18); pointer-events: none;
+  animation: cvRise 1.2s cubic-bezier(0.22,1,0.36,1) .5s both;
+}
+.cv-bottom-line { flex: 1; height: 1px; background: rgba(255,255,255,.07); }
+
+/* Brand clickable when cover hidden */
+.cover-gone .nav-brand { cursor: pointer; transition: opacity .2s; }
+.cover-gone .nav-brand:hover { opacity: .55; }
+
+/* Nav actions (Gramática + Repositorio — always visible) */
+.nav-actions {
+  display: flex; align-items: center; height: 100%;
+  flex-shrink: 0; border-left: 1px solid var(--border);
+}
+.nav-action-sep { width: 1px; height: 16px; background: var(--border); margin: 0 .1rem; }
+.nav-action-btn {
+  height: 100%; padding: 0 1.2rem;
+  font-family: var(--sans); font-size: .67rem;
+  letter-spacing: .14em; text-transform: uppercase; font-weight: 500;
+  color: rgba(17,17,16,.35); background: none; border: none; cursor: pointer;
+  white-space: nowrap; transition: color .15s;
+  display: flex; align-items: center; gap: .3rem;
+}
+.nav-action-btn:hover { color: var(--ink); }
+.nav-action-btn svg { flex-shrink: 0; }
+
+/* Gramática dropdown in nav */
+.nav-action-item { position: relative; height: 100%; display: flex; align-items: center; }
+.nav-action-menu {
+  position: fixed; top: var(--nav-h);
+  min-width: 210px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--red);
+  opacity: 0; pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity .15s, transform .15s;
+  z-index: 999;
+}
+.nav-action-menu.open {
+  opacity: 1; pointer-events: auto; transform: translateY(0);
+}
+.nav-action-menu-item {
+  display: block; width: 100%;
+  padding: .55rem 1.1rem;
+  font-family: var(--serif); font-size: .92rem; font-style: italic;
+  color: rgba(17,17,16,.38); background: none;
+  border: none; border-bottom: 1px solid var(--border);
+  cursor: pointer; text-align: left; transition: color .15s;
+}
+.nav-action-menu-item:last-child { border-bottom: none; }
+.nav-action-menu-item:hover { color: var(--ink); }
+
+/* Agradecimientos panel */
+.panel-agradecimientos {
+  grid-template-columns: 1fr;
+}
+.panel-agradecimientos .panel-inner {
+  grid-column: 1;
+  display: flex; flex-direction: column;
+  justify-content: center; min-height: 100%;
+}
 
 </style>
 </head>
-<body>
+<body class="dark-mode">
+
+<!-- ── CURSOR ─────────────────────────────────────────────────────── -->
+<img id="cv-cursor" src="mythistle.png" alt="">
+<div id="ipa-card" aria-hidden="true">
+  <div class="ic-sym"></div>
+  <div class="ic-desc"></div>
+  <div class="ic-gr"></div>
+  <video class="ic-video" playsinline loop></video>
+  <div class="ic-hint">📋 click · ver cita</div>
+  <div class="ic-cite">Seeing Speech (2014). University of Glasgow &amp; Queen Margaret University. Vídeos MRI de vocales cardinales. <em>seeingspeech.ac.uk</em></div>
+</div>
+
+<!-- ── PORTADA ──────────────────────────────────────────────────── -->
+<div id="cover">
+  <div class="cv-orb-layer" aria-hidden="true">
+    <div class="cv-orb cv-orb--1"></div>
+    <div class="cv-orb cv-orb--2"></div>
+    <div class="cv-orb cv-orb--3"></div>
+    <div class="cv-orb cv-orb--4"></div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <div class="cv-hero">
+    <div class="cv-corner cv-corner--tl" aria-hidden="true"></div>
+    <div class="cv-corner cv-corner--tr" aria-hidden="true"></div>
+    <div class="cv-corner cv-corner--bl" aria-hidden="true"></div>
+    <div class="cv-corner cv-corner--br" aria-hidden="true"></div>
+    <div class="cv-inner">
+      <h1 class="cv-title">
+        <span class="cv-title-top">Liaga</span>
+        <span class="cv-title-bot">Recrecenie</span>
+      </h1>
+      <img class="cv-flag" src="flag-transparent.png" alt="Bandera de Liaga Recrecenie">
+    </div>
+    <!-- Botones top-center -->
+    <div class="cv-btns cv-btns--top">
+      <div class="cv-dropdown">
+        <button class="cv-btn" id="cv-gram">Gramática</button>
+        <div class="cv-menu" id="cv-menu"></div>
+      </div>
+      <div class="cv-sep" aria-hidden="true"></div>
+      <button class="cv-btn" id="cv-repo">Repositorio</button>
+    </div>
+  </div>
+
+  <!-- ── AGRADECIMIENTOS ── -->
+  <div class="cv-ack">
+    <div class="cv-ack-inner">
+      <h2 class="cv-ack-title">Agradecimientos</h2>
+      <div class="cv-ack-text">
+        <p>Agradezco a mi Nastia por haberme apoyado cuando me sentía atascado y por darme siempre apoyo en este proyecto. Asimismo, por haber diseñado para mí la bandera del idioma.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <!-- ── TOP NAV ──────────────────────────────────────────────────── -->
 <header id="topnav">
@@ -761,6 +1268,17 @@ ul.glist li::before { content: '—'; position: absolute; left: 0; color: var(--
   <button class="nav-arrow" id="nav-prev" aria-label="Anterior">&#8592;</button>
   <nav class="nav-sections" id="nav-sections"></nav>
   <button class="nav-arrow" id="nav-next" aria-label="Siguiente">&#8594;</button>
+  <div class="nav-actions">
+    <div class="nav-action-item">
+      <button class="nav-action-btn" id="nav-gram">Gramática
+        <svg width="7" height="7" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5l3 3 3-3"/></svg>
+      </button>
+      <div class="nav-action-menu" id="nav-gram-menu"></div>
+    </div>
+    <div class="nav-action-sep"></div>
+    <button class="nav-action-btn" id="nav-repo">Repositorio</button>
+    <button id="theme-btn" title="Cambiar tema">☀</button>
+  </div>
 </header>
 
 <!-- ── HORIZONTAL CANVAS ────────────────────────────────────────── -->
@@ -769,6 +1287,198 @@ ul.glist li::before { content: '—'; position: absolute; left: 0; color: var(--
 <!-- ═══════════════════════════════════════════════════════════════
      PANEL 1 — ORTOGRAFÍA
 ═══════════════════════════════════════════════════════════════ -->
+<div class="panel" data-section="fonologia" data-label="Fonología">
+<div class="panel-index"><!-- built by JS --></div>
+<div class="panel-inner">
+
+  <p class="section-eyebrow">§ 11</p>
+  <h2 class="section-heading">Fonología</h2>
+
+  <!-- VOCALES -->
+  <div id="fon-vocales">
+    <h3 class="sub-heading">Vocales</h3>
+    <p>El idioma posee <strong>7 vocales</strong>. Ritmo silábico: cada sílaba mantiene su calidad vocálica plena. <span style="color:var(--muted);font-size:.88em">Pulsa un símbolo para escuchar su pronunciación.</span></p>
+    <div style="text-align:center;margin:1.5rem 0 2rem">
+    <svg id="vow-chart" viewBox="0 0 540 430" width="460" height="366"
+         style="font-family:var(--ipa);overflow:visible;max-width:100%">
+      <style>
+        .vow {
+          cursor: pointer;
+          transition: opacity .12s;
+          fill: #111;
+          stroke: white;
+          stroke-width: 14;
+          paint-order: stroke fill;
+        }
+        .vow:hover { opacity:.45; }
+      </style>
+
+      <!-- ── Líneas de filas (horizontales) ── -->
+      <!-- filas: x1 = intersección front en esa fila -->
+      <line x1="148" y1="70"  x2="455" y2="70"  stroke="#111" stroke-width="1.2"/>
+      <line x1="197" y1="175" x2="455" y2="175" stroke="#111" stroke-width="1.2"/>
+      <line x1="246" y1="280" x2="455" y2="280" stroke="#111" stroke-width="1.2"/>
+      <line x1="295" y1="385" x2="455" y2="385" stroke="#111" stroke-width="1.2"/>
+
+      <!-- ── Líneas de columnas ── -->
+      <line x1="148" y1="70"  x2="295" y2="385" stroke="#111" stroke-width="1.2"/><!-- front (más diagonal) -->
+      <line x1="300" y1="70"  x2="360" y2="385" stroke="#111" stroke-width="1.2"/><!-- central -->
+      <line x1="455" y1="70"  x2="455" y2="385" stroke="#111" stroke-width="1.2"/><!-- back (vertical) -->
+
+      <!-- ── Etiquetas de columna ── -->
+      <text x="148" y="44" text-anchor="middle" font-family="var(--sans)" font-size="13" fill="#555">Front</text>
+      <text x="300" y="44" text-anchor="middle" font-family="var(--sans)" font-size="13" fill="#555">Central</text>
+      <text x="455" y="44" text-anchor="middle" font-family="var(--sans)" font-size="13" fill="#555">Back</text>
+
+      <!-- ── Etiquetas de fila ── -->
+      <text x="90" y="74"  text-anchor="end" font-family="var(--sans)" font-size="13" fill="#555">Close</text>
+      <text x="90" y="179" text-anchor="end" font-family="var(--sans)" font-size="13" fill="#555">Close-mid</text>
+      <text x="90" y="284" text-anchor="end" font-family="var(--sans)" font-size="13" fill="#555">Open-mid</text>
+      <text x="90" y="389" text-anchor="end" font-family="var(--sans)" font-size="13" fill="#555">Open</text>
+
+      <!-- ── Vocales (clicables) — centradas en su intersección ── -->
+      <!-- i  ·  Front · Close -->
+      <text class="vow" x="148" y="70"  text-anchor="middle" dominant-baseline="central" font-size="22"
+            data-ipa="i" data-desc="Close front unrounded" data-gr="i" data-audio="audio/vow-i.mp3" data-video="video/vow-i.mp4">i</text>
+
+      <!-- ɨ  ·  Central · Close -->
+      <text class="vow" x="300" y="70"  text-anchor="middle" dominant-baseline="central" font-size="22"
+            data-ipa="ɨ" data-desc="Close central unrounded" data-gr="y" data-audio="audio/vow-y.mp3" data-video="video/vow-y.mp4">ɨ</text>
+
+      <!-- u  ·  Back · Close -->
+      <text class="vow" x="455" y="70"  text-anchor="middle" dominant-baseline="central" font-size="22"
+            data-ipa="u" data-desc="Close back rounded" data-gr="u" data-audio="audio/vow-u.mp3" data-video="video/vow-u.mp4">u</text>
+
+      <!-- e  ·  Front · Close-mid -->
+      <text class="vow" x="197" y="175" text-anchor="middle" dominant-baseline="central" font-size="22"
+            data-ipa="e" data-desc="Close-mid front unrounded" data-gr="e" data-audio="audio/vow-e.mp3" data-video="video/vow-e.mp4">e</text>
+
+      <!-- ε  ·  Front · Open-mid -->
+      <text class="vow" x="246" y="280" text-anchor="middle" dominant-baseline="central" font-size="22"
+            data-ipa="ε" data-desc="Open-mid front unrounded" data-gr="ē" data-audio="audio/vow-ee.mp3" data-video="video/vow-ee.mp4">ε</text>
+
+      <!-- ɔ  ·  Back · Open-mid -->
+      <text class="vow" x="455" y="280" text-anchor="middle" dominant-baseline="central" font-size="22"
+            data-ipa="ɔ" data-desc="Open-mid back rounded" data-gr="o" data-audio="audio/vow-o.mp3" data-video="video/vow-o.mp4">ɔ</text>
+
+      <!-- a  ·  Central · Open -->
+      <text class="vow" x="360" y="385" text-anchor="middle" dominant-baseline="central" font-size="22"
+            data-ipa="a" data-desc="Open central unrounded" data-gr="a" data-audio="audio/vow-a.mp3" data-video="video/vow-a.mp4">a</text>
+    </svg>
+</div>
+  </div>
+  <!-- audio de vocales manejado por script global IPA -->
+
+  <!-- CONSONANTES -->
+  <div id="fon-consonantes">
+    <h3 class="sub-heading">Consonantes</h3>
+    <div class="tbl-wrap">
+    <table class="cons-tbl">
+      <thead>
+        <tr>
+          <th rowspan="2" class="mn">Consonantes</th>
+          <th colspan="2">Labial</th>
+          <th colspan="2">Dental</th>
+          <th colspan="2">Alveolar</th>
+          <th>Post-Alv.</th>
+          <th>Palatal</th>
+          <th colspan="2">Velar</th>
+        </tr>
+        <tr>
+          <th>Hard</th><th>Soft</th>
+          <th>Hard</th><th>Soft</th>
+          <th>Hard</th><th>Soft</th>
+          <th>Hard</th>
+          <th>Soft</th>
+          <th>Hard</th><th>Soft</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mn">Nasal</td>
+          <td class="ipa"><span class="con" data-ipa="m"  data-desc="Nasal bilabial"              data-video="video/con-m.mp4" data-audio="audio/con-m.mp3">m</span></td>
+          <td class="ipa"><span class="con" data-ipa="mʲ" data-desc="Nasal bilabial palatalizada"  data-audio="audio/con-mj.mp3">mʲ</span></td>
+          <td></td><td></td>
+          <td class="ipa"><span class="con" data-ipa="n"  data-desc="Nasal alveolar"              data-video="video/con-n.mp4" data-audio="audio/con-n.mp3">n</span></td>
+          <td class="ipa"><span class="con" data-ipa="nʲ" data-desc="Nasal alveolar palatalizada"  data-audio="audio/con-nj.mp3">nʲ</span></td>
+          <td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="mn">Plosiva</td>
+          <td class="ipa"><span class="con" data-ipa="p"  data-desc="Plosiva bilabial sorda"               data-video="video/con-p.mp4" data-audio="audio/con-p.mp3">p</span> <span class="con" data-ipa="b"  data-desc="Plosiva bilabial sonora"               data-video="video/con-b.mp4" data-audio="audio/con-b.mp3">b</span></td>
+          <td class="ipa"><span class="con" data-ipa="pʲ" data-desc="Plosiva bilabial sorda palatalizada"   data-audio="audio/con-pj.mp3">pʲ</span> <span class="con" data-ipa="bʲ" data-desc="Plosiva bilabial sonora palatalizada"   data-audio="audio/con-bj.mp3">bʲ</span></td>
+          <td class="ipa"><span class="con" data-ipa="t"  data-desc="Plosiva dental sorda"                 data-video="video/con-t.mp4" data-audio="audio/con-t.mp3">t</span> <span class="con" data-ipa="d"  data-desc="Plosiva dental sonora"                 data-video="video/con-d.mp4" data-audio="audio/con-d.mp3">d</span></td>
+          <td class="ipa"><span class="con" data-ipa="tʲ" data-desc="Plosiva dental sorda palatalizada"     data-audio="audio/con-tj.mp3">tʲ</span> <span class="con" data-ipa="dʲ" data-desc="Plosiva dental sonora palatalizada"     data-audio="audio/con-dj.mp3">dʲ</span></td>
+          <td></td><td></td><td></td><td></td>
+          <td class="ipa"><span class="con" data-ipa="k"  data-desc="Plosiva velar sorda"                  data-video="video/con-k.mp4" data-audio="audio/con-k.mp3">k</span> <span class="con" data-ipa="g"  data-desc="Plosiva velar sonora"                  data-audio="audio/con-g.mp3">g</span></td>
+          <td class="ipa"><span class="con" data-ipa="kʲ" data-desc="Plosiva velar sorda palatalizada"      data-audio="audio/con-kj.mp3">kʲ</span> <span class="con" data-ipa="gʲ" data-desc="Plosiva velar sonora palatalizada"      data-audio="audio/con-gj.mp3">gʲ</span></td>
+        </tr>
+        <tr>
+          <td class="mn">Africada</td>
+          <td></td><td></td><td></td><td></td>
+          <td class="ipa"><span class="con" data-ipa="t͡s" data-desc="Africada alveolar sorda"   data-audio="audio/con-ts.mp3">t͡s</span></td>
+          <td></td><td></td>
+          <td class="ipa"><span class="con" data-ipa="t͡ɕ" data-desc="Africada palatal sorda"    data-audio="audio/con-tc.mp3">t͡ɕ</span></td>
+          <td></td><td></td>
+        </tr>
+        <tr>
+          <td class="mn">Fricativa</td>
+          <td class="ipa"><span class="con" data-ipa="f"  data-desc="Fricativa labiodental sorda"              data-video="video/con-f.mp4" data-audio="audio/con-f.mp3">f</span> <span class="con" data-ipa="v"  data-desc="Fricativa labiodental sonora"              data-video="video/con-v.mp4" data-audio="audio/con-v.mp3">v</span></td>
+          <td class="ipa"><span class="con" data-ipa="fʲ" data-desc="Fricativa labiodental sorda palatalizada"  data-audio="audio/con-fj.mp3">fʲ</span> <span class="con" data-ipa="vʲ" data-desc="Fricativa labiodental sonora palatalizada"  data-audio="audio/con-vj.mp3">vʲ</span></td>
+          <td></td><td></td>
+          <td class="ipa"><span class="con" data-ipa="s"  data-desc="Fricativa alveolar sorda"                 data-video="video/con-s.mp4" data-audio="audio/con-s.mp3">s</span> <span class="con" data-ipa="z"  data-desc="Fricativa alveolar sonora"                 data-video="video/con-z.mp4" data-audio="audio/con-z.mp3">z</span></td>
+          <td class="ipa"><span class="con" data-ipa="sʲ" data-desc="Fricativa alveolar sorda palatalizada"     data-audio="audio/con-sj.mp3">sʲ</span> <span class="con" data-ipa="zʲ" data-desc="Fricativa alveolar sonora palatalizada"     data-audio="audio/con-zj.mp3">zʲ</span></td>
+          <td class="ipa"><span class="con" data-ipa="ʂ"  data-desc="Fricativa retroflexa sorda"               data-audio="audio/con-sr.mp3">ʂ</span> <span class="con" data-ipa="ʐ"  data-desc="Fricativa retroflexa sonora"               data-audio="audio/con-zr.mp3">ʐ</span></td>
+          <td class="ipa"><span class="con" data-ipa="ɕ"  data-desc="Fricativa alveolopalatal sorda"            data-video="video/con-sh.mp4" data-audio="audio/con-sh.mp3">ɕ</span></td>
+          <td class="ipa"><span class="con" data-ipa="x"  data-desc="Fricativa velar sorda"                    data-video="video/con-x.mp4" data-audio="audio/con-x.mp3">x</span></td>
+          <td class="ipa"><span class="con" data-ipa="xʲ" data-desc="Fricativa velar sorda palatalizada"        data-audio="audio/con-xj.mp3">xʲ</span></td>
+        </tr>
+        <tr>
+          <td class="mn">Aproximante</td>
+          <td></td><td></td><td></td><td></td>
+          <td></td><td></td><td></td>
+          <td class="ipa"><span class="con" data-ipa="j"  data-desc="Aproximante palatal"       data-video="video/con-j.mp4" data-audio="audio/con-j.mp3">j</span></td>
+          <td class="ipa"><span class="con" data-ipa="w"  data-desc="Aproximante labiovelar"    data-audio="audio/con-w.mp3">w</span></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="mn">Lateral</td>
+          <td></td><td></td><td></td><td></td>
+          <td class="ipa"><span class="con" data-ipa="l"  data-desc="Lateral alveolar"              data-video="video/con-l.mp4" data-audio="audio/con-l.mp3">l</span></td>
+          <td class="ipa"><span class="con" data-ipa="lʲ" data-desc="Lateral alveolar palatalizada"  data-audio="audio/con-lj.mp3">lʲ</span></td>
+          <td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="mn">Tap</td>
+          <td></td><td></td><td></td><td></td>
+          <td class="ipa"><span class="con" data-ipa="ɾ"  data-desc="Tap alveolar"              data-video="video/con-r.mp4" data-audio="audio/con-r.mp3">ɾ</span></td>
+          <td class="ipa"><span class="con" data-ipa="ɾʲ" data-desc="Tap alveolar palatalizado"  data-audio="audio/con-rj.mp3">ɾʲ</span></td>
+          <td></td><td></td><td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var currentAudio = null;
+    document.querySelectorAll('#fon-consonantes .con').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.stopPropagation();
+        var src = this.dataset.audio;
+        if (src){
+          if (currentAudio){ currentAudio.pause(); currentAudio.currentTime=0; }
+          currentAudio = new Audio(src);
+          currentAudio.play().catch(function(){});
+        }
+      });
+    });
+  })();
+  </script>
+
+</div>
+</div>
 <div class="panel" data-section="ortografia" data-label="Ortografía y Pronunciación">
 <div class="panel-index"><!-- built by JS --></div>
 <div class="panel-inner">
@@ -2113,213 +2823,6 @@ ul.glist li::before { content: '—'; position: absolute; left: 0; color: var(--
 <!-- ═══════════════════════════════════════════════════════════════
      PANEL — FONOLOGÍA
 ═══════════════════════════════════════════════════════════════ -->
-<div class="panel" data-section="fonologia" data-label="Fonología">
-<div class="panel-index"><!-- built by JS --></div>
-<div class="panel-inner">
-
-  <p class="section-eyebrow">§ 11</p>
-  <h2 class="section-heading">Fonología</h2>
-
-  <!-- VOCALES -->
-  <div id="fon-vocales">
-    <h3 class="sub-heading">Vocales</h3>
-    <p>El idioma posee <strong>7 vocales</strong>. Ritmo silábico: cada sílaba mantiene su calidad vocálica plena. <span style="color:var(--muted);font-size:.88em">Pulsa un símbolo para escuchar su pronunciación.</span></p>
-    <div style="text-align:center;margin:1.5rem 0 2rem">
-    <svg id="vow-chart" viewBox="0 0 540 430" width="460" height="366"
-         style="font-family:var(--ipa);overflow:visible;max-width:100%">
-      <style>
-        .vow {
-          cursor: pointer;
-          transition: opacity .12s;
-          fill: #111;
-          stroke: white;
-          stroke-width: 14;
-          paint-order: stroke fill;
-        }
-        .vow:hover { opacity:.45; }
-      </style>
-
-      <!-- ── Líneas de filas (horizontales) ── -->
-      <!-- filas: x1 = intersección front en esa fila -->
-      <line x1="148" y1="70"  x2="455" y2="70"  stroke="#111" stroke-width="1.2"/>
-      <line x1="197" y1="175" x2="455" y2="175" stroke="#111" stroke-width="1.2"/>
-      <line x1="246" y1="280" x2="455" y2="280" stroke="#111" stroke-width="1.2"/>
-      <line x1="295" y1="385" x2="455" y2="385" stroke="#111" stroke-width="1.2"/>
-
-      <!-- ── Líneas de columnas ── -->
-      <line x1="148" y1="70"  x2="295" y2="385" stroke="#111" stroke-width="1.2"/><!-- front (más diagonal) -->
-      <line x1="300" y1="70"  x2="360" y2="385" stroke="#111" stroke-width="1.2"/><!-- central -->
-      <line x1="455" y1="70"  x2="455" y2="385" stroke="#111" stroke-width="1.2"/><!-- back (vertical) -->
-
-      <!-- ── Etiquetas de columna ── -->
-      <text x="148" y="44" text-anchor="middle" font-family="var(--sans)" font-size="13" fill="#555">Front</text>
-      <text x="300" y="44" text-anchor="middle" font-family="var(--sans)" font-size="13" fill="#555">Central</text>
-      <text x="455" y="44" text-anchor="middle" font-family="var(--sans)" font-size="13" fill="#555">Back</text>
-
-      <!-- ── Etiquetas de fila ── -->
-      <text x="90" y="74"  text-anchor="end" font-family="var(--sans)" font-size="13" fill="#555">Close</text>
-      <text x="90" y="179" text-anchor="end" font-family="var(--sans)" font-size="13" fill="#555">Close-mid</text>
-      <text x="90" y="284" text-anchor="end" font-family="var(--sans)" font-size="13" fill="#555">Open-mid</text>
-      <text x="90" y="389" text-anchor="end" font-family="var(--sans)" font-size="13" fill="#555">Open</text>
-
-      <!-- ── Vocales (clicables) — centradas en su intersección ── -->
-      <!-- i  ·  Front · Close -->
-      <text class="vow" x="148" y="70"  text-anchor="middle" dominant-baseline="central" font-size="22"
-            data-ipa="i" data-desc="Close front unrounded" data-gr="i" data-audio="audio/vow-i.mp3">i</text>
-
-      <!-- ɨ  ·  Central · Close -->
-      <text class="vow" x="300" y="70"  text-anchor="middle" dominant-baseline="central" font-size="22"
-            data-ipa="ɨ" data-desc="Close central unrounded" data-gr="y" data-audio="audio/vow-y.mp3">ɨ</text>
-
-      <!-- u  ·  Back · Close -->
-      <text class="vow" x="455" y="70"  text-anchor="middle" dominant-baseline="central" font-size="22"
-            data-ipa="u" data-desc="Close back rounded" data-gr="u" data-audio="audio/vow-u.mp3">u</text>
-
-      <!-- e  ·  Front · Close-mid -->
-      <text class="vow" x="197" y="175" text-anchor="middle" dominant-baseline="central" font-size="22"
-            data-ipa="e" data-desc="Close-mid front unrounded" data-gr="e" data-audio="audio/vow-e.mp3">e</text>
-
-      <!-- ε  ·  Front · Open-mid -->
-      <text class="vow" x="246" y="280" text-anchor="middle" dominant-baseline="central" font-size="22"
-            data-ipa="ε" data-desc="Open-mid front unrounded" data-gr="ê" data-audio="audio/vow-ee.mp3">ε</text>
-
-      <!-- ɔ  ·  Back · Open-mid -->
-      <text class="vow" x="455" y="280" text-anchor="middle" dominant-baseline="central" font-size="22"
-            data-ipa="ɔ" data-desc="Open-mid back rounded" data-gr="o" data-audio="audio/vow-o.mp3">ɔ</text>
-
-      <!-- a  ·  Central · Open -->
-      <text class="vow" x="360" y="385" text-anchor="middle" dominant-baseline="central" font-size="22"
-            data-ipa="a" data-desc="Open central unrounded" data-gr="a" data-audio="audio/vow-a.mp3">a</text>
-    </svg>
-    </div>
-  </div>
-  <script>
-  (function() {
-    var currentAudio = null;
-    document.querySelectorAll('#vow-chart .vow').forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var src = this.dataset.audio;
-        if (src) {
-          if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
-          currentAudio = new Audio(src);
-          currentAudio.play().catch(function() {});
-        }
-      });
-    });
-  })();
-  </script>
-
-  <!-- CONSONANTES -->
-  <div id="fon-consonantes">
-    <h3 class="sub-heading">Consonantes</h3>
-    <div class="tbl-wrap">
-    <table class="cons-tbl">
-      <thead>
-        <tr>
-          <th rowspan="2" class="mn">Consonantes</th>
-          <th colspan="2">Labial</th>
-          <th colspan="2">Dental</th>
-          <th colspan="2">Alveolar</th>
-          <th>Post-Alv.</th>
-          <th>Palatal</th>
-          <th colspan="2">Velar</th>
-        </tr>
-        <tr>
-          <th>Hard</th><th>Soft</th>
-          <th>Hard</th><th>Soft</th>
-          <th>Hard</th><th>Soft</th>
-          <th>Hard</th>
-          <th>Soft</th>
-          <th>Hard</th><th>Soft</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="mn">Nasal</td>
-          <td class="ipa"><span class="con" data-ipa="m"  data-desc="Nasal bilabial"              data-audio="audio/con-m.mp3">m</span></td>
-          <td class="ipa"><span class="con" data-ipa="mʲ" data-desc="Nasal bilabial palatalizada"  data-audio="audio/con-mj.mp3">mʲ</span></td>
-          <td></td><td></td>
-          <td class="ipa"><span class="con" data-ipa="n"  data-desc="Nasal alveolar"              data-audio="audio/con-n.mp3">n</span></td>
-          <td class="ipa"><span class="con" data-ipa="nʲ" data-desc="Nasal alveolar palatalizada"  data-audio="audio/con-nj.mp3">nʲ</span></td>
-          <td></td><td></td><td></td><td></td>
-        </tr>
-        <tr>
-          <td class="mn">Plosiva</td>
-          <td class="ipa"><span class="con" data-ipa="p"  data-desc="Plosiva bilabial sorda"               data-audio="audio/con-p.mp3">p</span> <span class="con" data-ipa="b"  data-desc="Plosiva bilabial sonora"               data-audio="audio/con-b.mp3">b</span></td>
-          <td class="ipa"><span class="con" data-ipa="pʲ" data-desc="Plosiva bilabial sorda palatalizada"   data-audio="audio/con-pj.mp3">pʲ</span> <span class="con" data-ipa="bʲ" data-desc="Plosiva bilabial sonora palatalizada"   data-audio="audio/con-bj.mp3">bʲ</span></td>
-          <td class="ipa"><span class="con" data-ipa="t"  data-desc="Plosiva dental sorda"                 data-audio="audio/con-t.mp3">t</span> <span class="con" data-ipa="d"  data-desc="Plosiva dental sonora"                 data-audio="audio/con-d.mp3">d</span></td>
-          <td class="ipa"><span class="con" data-ipa="tʲ" data-desc="Plosiva dental sorda palatalizada"     data-audio="audio/con-tj.mp3">tʲ</span> <span class="con" data-ipa="dʲ" data-desc="Plosiva dental sonora palatalizada"     data-audio="audio/con-dj.mp3">dʲ</span></td>
-          <td></td><td></td><td></td><td></td>
-          <td class="ipa"><span class="con" data-ipa="k"  data-desc="Plosiva velar sorda"                  data-audio="audio/con-k.mp3">k</span> <span class="con" data-ipa="g"  data-desc="Plosiva velar sonora"                  data-audio="audio/con-g.mp3">g</span></td>
-          <td class="ipa"><span class="con" data-ipa="kʲ" data-desc="Plosiva velar sorda palatalizada"      data-audio="audio/con-kj.mp3">kʲ</span> <span class="con" data-ipa="gʲ" data-desc="Plosiva velar sonora palatalizada"      data-audio="audio/con-gj.mp3">gʲ</span></td>
-        </tr>
-        <tr>
-          <td class="mn">Africada</td>
-          <td></td><td></td><td></td><td></td>
-          <td class="ipa"><span class="con" data-ipa="t͡s" data-desc="Africada alveolar sorda"   data-audio="audio/con-ts.mp3">t͡s</span></td>
-          <td></td><td></td>
-          <td class="ipa"><span class="con" data-ipa="t͡ɕ" data-desc="Africada palatal sorda"    data-audio="audio/con-tc.mp3">t͡ɕ</span></td>
-          <td></td><td></td>
-        </tr>
-        <tr>
-          <td class="mn">Fricativa</td>
-          <td class="ipa"><span class="con" data-ipa="f"  data-desc="Fricativa labiodental sorda"              data-audio="audio/con-f.mp3">f</span> <span class="con" data-ipa="v"  data-desc="Fricativa labiodental sonora"              data-audio="audio/con-v.mp3">v</span></td>
-          <td class="ipa"><span class="con" data-ipa="fʲ" data-desc="Fricativa labiodental sorda palatalizada"  data-audio="audio/con-fj.mp3">fʲ</span> <span class="con" data-ipa="vʲ" data-desc="Fricativa labiodental sonora palatalizada"  data-audio="audio/con-vj.mp3">vʲ</span></td>
-          <td></td><td></td>
-          <td class="ipa"><span class="con" data-ipa="s"  data-desc="Fricativa alveolar sorda"                 data-audio="audio/con-s.mp3">s</span> <span class="con" data-ipa="z"  data-desc="Fricativa alveolar sonora"                 data-audio="audio/con-z.mp3">z</span></td>
-          <td class="ipa"><span class="con" data-ipa="sʲ" data-desc="Fricativa alveolar sorda palatalizada"     data-audio="audio/con-sj.mp3">sʲ</span> <span class="con" data-ipa="zʲ" data-desc="Fricativa alveolar sonora palatalizada"     data-audio="audio/con-zj.mp3">zʲ</span></td>
-          <td class="ipa"><span class="con" data-ipa="ʂ"  data-desc="Fricativa retroflexa sorda"               data-audio="audio/con-sr.mp3">ʂ</span> <span class="con" data-ipa="ʐ"  data-desc="Fricativa retroflexa sonora"               data-audio="audio/con-zr.mp3">ʐ</span></td>
-          <td class="ipa"><span class="con" data-ipa="ɕ"  data-desc="Fricativa alveolopalatal sorda"            data-audio="audio/con-sh.mp3">ɕ</span></td>
-          <td class="ipa"><span class="con" data-ipa="x"  data-desc="Fricativa velar sorda"                    data-audio="audio/con-x.mp3">x</span></td>
-          <td class="ipa"><span class="con" data-ipa="xʲ" data-desc="Fricativa velar sorda palatalizada"        data-audio="audio/con-xj.mp3">xʲ</span></td>
-        </tr>
-        <tr>
-          <td class="mn">Aproximante</td>
-          <td></td><td></td><td></td><td></td>
-          <td></td><td></td><td></td>
-          <td class="ipa"><span class="con" data-ipa="j"  data-desc="Aproximante palatal"       data-audio="audio/con-j.mp3">j</span></td>
-          <td class="ipa"><span class="con" data-ipa="w"  data-desc="Aproximante labiovelar"    data-audio="audio/con-w.mp3">w</span></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td class="mn">Lateral</td>
-          <td></td><td></td><td></td><td></td>
-          <td class="ipa"><span class="con" data-ipa="l"  data-desc="Lateral alveolar"              data-audio="audio/con-l.mp3">l</span></td>
-          <td class="ipa"><span class="con" data-ipa="lʲ" data-desc="Lateral alveolar palatalizada"  data-audio="audio/con-lj.mp3">lʲ</span></td>
-          <td></td><td></td><td></td><td></td>
-        </tr>
-        <tr>
-          <td class="mn">Tap</td>
-          <td></td><td></td><td></td><td></td>
-          <td class="ipa"><span class="con" data-ipa="ɾ"  data-desc="Tap alveolar"              data-audio="audio/con-r.mp3">ɾ</span></td>
-          <td class="ipa"><span class="con" data-ipa="ɾʲ" data-desc="Tap alveolar palatalizado"  data-audio="audio/con-rj.mp3">ɾʲ</span></td>
-          <td></td><td></td><td></td><td></td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-
-  <script>
-  (function(){
-    var currentAudio = null;
-    document.querySelectorAll('#fon-consonantes .con').forEach(function(el){
-      el.addEventListener('click', function(e){
-        e.stopPropagation();
-        var src = this.dataset.audio;
-        if (src){
-          if (currentAudio){ currentAudio.pause(); currentAudio.currentTime=0; }
-          currentAudio = new Audio(src);
-          currentAudio.play().catch(function(){});
-        }
-      });
-    });
-  })();
-  </script>
-
-</div>
-</div>
 
 </div><!-- /canvas -->
 
@@ -2704,6 +3207,216 @@ async function saveToGitHub(saveBtn, saveStatus) {
 }
 
 document.addEventListener('DOMContentLoaded', initEditor);
+</script>
+
+<script>
+// ── PORTADA ───────────────────────────────────────────────────────
+(function(){
+  var c = document.getElementById('cover');
+  if (!c) return;
+
+  function hideCover(cb) {
+    c.classList.add('out');
+    document.body.classList.add('cover-gone');
+    setTimeout(function(){ c.style.display='none'; if(cb) cb(); }, 720);
+  }
+
+  function showCover() {
+    c.style.display = '';
+    c.scrollTop = 0;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      c.classList.remove('out');
+      document.body.classList.remove('cover-gone');
+    }); });
+  }
+
+  // ESC → cerrar portada
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !document.body.classList.contains('cover-gone')) hideCover();
+  });
+
+  // Gramática button → entrar a la gramática
+  document.getElementById('cv-gram').addEventListener('click', function(e){
+    if (!e.target.closest('#cv-menu')) hideCover();
+  });
+
+  // Build dropdown del cover desde panelData
+  var menu = document.getElementById('cv-menu');
+  panels.forEach(function(p, i){
+    if (p.dataset.nogram) return;
+    var label = p.dataset.label; if (!label) return;
+    var btn = document.createElement('button');
+    btn.className = 'cv-menu-item';
+    btn.textContent = label;
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      hideCover(function(){ scrollToPanel(i); });
+    });
+    menu.appendChild(btn);
+  });
+
+  // Repositorio → GitHub
+  document.getElementById('cv-repo').addEventListener('click', function(){
+    window.open('https://github.com/Anz4ku/Liaga-Recrecenie','_blank');
+  });
+
+  // Brand → volver a portada
+  document.querySelector('.nav-brand').addEventListener('click', function(){
+    if (document.body.classList.contains('cover-gone')) showCover();
+  });
+})();
+
+// ── NAV GRAMÁTICA DROPDOWN ────────────────────────────────────────
+(function(){
+  var btn  = document.getElementById('nav-gram');
+  var menu = document.getElementById('nav-gram-menu');
+  var repo = document.getElementById('nav-repo');
+  if (!btn || !menu) return;
+
+  // Build menu from panels (exclude data-nogram panels)
+  panels.forEach(function(p, i){
+    if (p.dataset.nogram) return;
+    var label = p.dataset.label; if (!label) return;
+    var item = document.createElement('button');
+    item.className = 'nav-action-menu-item';
+    item.textContent = label;
+    item.addEventListener('click', function(){
+      menu.classList.remove('open');
+      scrollToPanel(i);
+    });
+    menu.appendChild(item);
+  });
+
+  // Position menu under the button
+  function positionMenu() {
+    var r = btn.getBoundingClientRect();
+    menu.style.left = r.left + 'px';
+  }
+
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    positionMenu();
+    menu.classList.toggle('open');
+  });
+
+  document.addEventListener('click', function(){ menu.classList.remove('open'); });
+
+  // Repositorio
+  if (repo) repo.addEventListener('click', function(){
+    window.open('https://github.com/Anz4ku/Liaga-Recrecenie','_blank');
+  });
+})();
+
+// ── TEMA CLARO / OSCURO ───────────────────────────────────────────
+(function(){
+  var btn = document.getElementById('theme-btn');
+  if (!btn) return;
+  function updateBtn() {
+    btn.textContent = document.body.classList.contains('dark-mode') ? '☀' : '🌙';
+  }
+  updateBtn();
+  btn.addEventListener('click', function(){
+    document.body.classList.toggle('dark-mode');
+    updateBtn();
+  });
+})();
+</script>
+
+<script>
+/* ── CURSOR DE CARDO (todo el documento) ────────────────────────── */
+(function(){
+  var cur = document.getElementById('cv-cursor');
+  if (!cur) return;
+  document.body.classList.add('cursor-active');
+  cur.style.opacity = '1';
+
+  document.addEventListener('mousemove', function(e){
+    var w = cur.offsetWidth || 44;
+    cur.style.left = (e.clientX - w * 0.45) + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+  document.addEventListener('mouseleave', function(){ cur.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function(){ cur.style.opacity = '1'; });
+})();
+
+/* ── FICHA IPA + AUDIO ───────────────────────────────────────────── */
+(function(){
+  var card = document.getElementById('ipa-card');
+  if (!card) return;
+  var symEl  = card.querySelector('.ic-sym');
+  var descEl = card.querySelector('.ic-desc');
+  var grEl   = card.querySelector('.ic-gr');
+  var vidEl  = card.querySelector('.ic-video');
+  var hintEl = card.querySelector('.ic-hint');
+  var mx = 0, my = 0;
+  var currentAudio = null;
+  var activeEl = null;
+
+  document.addEventListener('mousemove', function(e){
+    mx = e.clientX; my = e.clientY;
+    if (card.classList.contains('visible')) position();
+  });
+
+  function position(){
+    var w = card.offsetWidth  || 165;
+    var h = card.offsetHeight || 120;
+    var x = mx + 20, y = my + 16;
+    if (x + w > window.innerWidth  - 8) x = mx - w - 12;
+    if (y + h > window.innerHeight - 8) y = my - h - 8;
+    card.style.left = x + 'px';
+    card.style.top  = y + 'px';
+  }
+
+  function show(el){
+    symEl.textContent  = el.dataset.ipa || el.textContent.trim();
+    descEl.textContent = el.dataset.desc || '';
+    var gr = el.dataset.gr || '';
+    if (gr){ grEl.textContent = 'Grafema: ' + gr; grEl.style.display = ''; }
+    else grEl.style.display = 'none';
+    // load video on hover if available
+    var vsrc = el.dataset.video;
+    if (vsrc && vidEl && activeEl !== el){
+      vidEl.src = vsrc;
+      card.classList.add('has-video');
+      hintEl.textContent = '📋 click · ver cita';
+      vidEl.play().catch(function(){});
+    } else if (!vsrc){
+      card.classList.remove('has-video');
+      if (vidEl){ vidEl.pause(); vidEl.removeAttribute('src'); vidEl.load(); }
+      hintEl.textContent = '📋 click · ver cita';
+    }
+    activeEl = el;
+    card.classList.add('visible');
+    position();
+  }
+
+  function hide(){
+    card.classList.remove('visible', 'has-video', 'cite-open');
+    activeEl = null;
+    if (vidEl){ vidEl.pause(); vidEl.removeAttribute('src'); vidEl.load(); }
+  }
+
+  function playAudio(el){
+    var src = el.dataset.audio;
+    if (!src) return;
+    if (currentAudio){ currentAudio.pause(); currentAudio.currentTime = 0; }
+    currentAudio = new Audio(src);
+    currentAudio.play().catch(function(){});
+  }
+
+  document.querySelectorAll('.vow, .con').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ show(this); });
+    el.addEventListener('mouseleave', hide);
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      card.classList.toggle('cite-open');
+    });
+  });
+
+  // click outside closes card
+  document.addEventListener('click', function(){ hide(); });
+})();
+
 </script>
 
 <!-- ── EDIT TOOLBAR ──────────────────────────────────────────────── -->
